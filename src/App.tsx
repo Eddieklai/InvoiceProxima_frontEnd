@@ -1,34 +1,33 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 
+import PrivateRoute from './components/Auth/PrivateRoute';
+
 import Login from '@/pages/Login';
 import Register from '@/pages/Register';
 import Dashboard from '@/pages/Dashboard';
 
-/**
- * Composant principal de l'application
- * Gère le routage et les styles globaux
- */
+import { AuthProvider } from '@/context/AuthContext';
 
 function App() {
   return (
-    <>
-      <Router>
+    <Router>
+      <AuthProvider>
         <Routes>
-          {/* Redirection vers login par défaut */}
           <Route path="/" element={<Navigate to="/login" replace />} />
-          
-          {/* Pages d'authentification */}
+
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          
-          {/* Pages de l'application */}
-          <Route path="/dashboard" element={<Dashboard />} />
-          
-          {/* Route de fallback */}
+
+          <Route path="/dashboard" element={
+            <PrivateRoute>
+              <Dashboard />
+            </PrivateRoute>
+          }/>
+
           <Route path="*" element={<Navigate to="/login" replace />} />
         </Routes>
-      </Router>
-    </>
+      </AuthProvider>
+    </Router>
   );
 }
 
