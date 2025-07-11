@@ -6,7 +6,8 @@ import {loginUser, registerUser, getMe} from '@/services/userServices';
 interface User {
   id: string;
   email: string;
-  // ... autres champs
+  name:string;
+  phone: string;
 }
 
 interface AuthContextType {

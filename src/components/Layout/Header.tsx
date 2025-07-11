@@ -23,6 +23,7 @@ const Header: React.FC = () => {
             <div style={styles.userInfo}>
               <span style={styles.userName}>{user.name}</span>
               <span style={styles.userEmail}>{user.email}</span>
+              <span style={styles.userPhone}>{user.phone}</span>
             </div>
           )}
           <button
@@ -96,6 +97,10 @@ const styles = {
     fontSize: '16px',
   },
   userEmail: {
+    fontSize: '13px',
+    color: Colors.darkGray,
+  },
+  userPhone: {
     fontSize: '13px',
     color: Colors.darkGray,
   },
