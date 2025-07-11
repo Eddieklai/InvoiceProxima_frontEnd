@@ -12,11 +12,6 @@ import {
 import Layout from '@/components/Layout/Layout';
 import { Colors } from '@/constants/Colors';
 
-/**
- * Page Dashboard - Tableau de bord principal
- * Affiche les statistiques et les accès rapides aux fonctionnalités
- */
-
 const tools = [
   {
     id: 'invoices',
