@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Colors } from '@/constants/Colors';
 
 import EditableTitle from '@/components/invoiceEditor/EditableTitle';
@@ -6,11 +6,11 @@ import EditableLogo from '@/components/invoiceEditor/EditableLogo';
 import AddressUser from '@/components/invoiceEditor/AdressUser';
 
 import { useProducts } from '@/context/ProductsContext';
-import { useClients } from '@/context/ClientsContext';
+// import { useClients } from '@/context/ClientsContext';
 
 export default function InvoiceEditor() {
   const { products } = useProducts();
-  const { clients } = useClients();
+  // const { clients } = useClients();
 
   const [title, setTitle] = useState('');
   const [logo, setLogo] = useState('');

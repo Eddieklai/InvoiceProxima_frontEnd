@@ -1,4 +1,3 @@
-import React from 'react';
 import { Colors } from '@/constants/Colors';
 
 import { useAuth } from '@/context/AuthContext';
@@ -10,12 +9,12 @@ export default function AdressUser() {
   return (
     <div style={styles.container}>
       <div style={styles.companyName}>{user.companyName}</div>
+      <div style={styles.address}>{user.address}</div>
       {(user.postalCode || user.city || user.country) && (
           <div style={styles.address}>
           {[user.postalCode, user.city, user.country].filter(Boolean).join(' ')}
         </div>
       )}
-      <div style={styles.address}>{user.address}</div>
       {user.phone && (
         <div style={styles.infoLine}>
           <span style={styles.label}>Téléphone :</span> {user.phone}

@@ -1,5 +1,3 @@
-
-import { useState } from 'react';
 import { useModal } from '@/context/ModalContext';
 import { Colors } from '@/constants/Colors';
 
