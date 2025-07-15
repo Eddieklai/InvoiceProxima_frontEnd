@@ -31,37 +31,16 @@ function App() {
             </PrivateRoute>
           } />
 
-          <Route path="/invoices" element={
+          <Route element={
             <PrivateRoute>
-              <PrivateLayout>
-                <Invoices />
-              </PrivateLayout>
+              <PrivateLayout />
             </PrivateRoute>
-          } />
-
-          <Route path="/products" element={
-            <PrivateRoute>
-              <PrivateLayout>
-                <Products />
-              </PrivateLayout>
-            </PrivateRoute>
-          } />
-
-          <Route path="/clients" element={
-            <PrivateRoute>
-              <PrivateLayout>
-                <Clients />
-              </PrivateLayout>
-            </PrivateRoute>
-          } />
-
-          <Route path="/settings" element={
-            <PrivateRoute>
-              <PrivateLayout>
-                <Settings />
-              </PrivateLayout>
-            </PrivateRoute>
-          } />
+          }>
+            <Route path="/invoices" element={<Invoices />} />
+            <Route path="/products" element={<Products />} />
+            <Route path="/clients" element={<Clients />} />
+            <Route path="/settings" element={<Settings />} />
+          </Route>
 
           <Route path="*" element={<Navigate to="/login" replace />} />
         </Routes>

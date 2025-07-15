@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, Outlet } from 'react-router-dom';
 import { FileText, Package, Users, Settings } from 'lucide-react';
 import { Colors } from '@/constants/Colors';
 
@@ -11,7 +11,7 @@ const menuItems = [
   { label : 'Tableau de bord', icon: FileText, path: '/dashboard' },
 ];
 
-const PrivateLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+const PrivateLayout: React.FC = () => {
   const location = useLocation();
 
   return (
@@ -52,7 +52,7 @@ const PrivateLayout: React.FC<{ children: React.ReactNode }> = ({ children }) =>
         })}
       </aside>
       <main style={{ flex: 1, padding: 40 }}>
-        {children}
+        <Outlet />
       </main>
     </div>
   );
