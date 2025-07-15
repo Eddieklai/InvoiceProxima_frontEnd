@@ -17,6 +17,10 @@ import Products from '@/pages/Products';
 import Clients from '@/pages/Clients';
 import Settings from '@/pages/Settings';
 
+import InvoiceEditor from './components/invoiceEditor/InvoiceEditor';
+
+import NotFound from './pages/NotFound';
+
 import PrivateLayout from './components/Layout/PrivateLayout';
 
 import { AuthProvider } from '@/context/AuthContext';
@@ -49,6 +53,10 @@ function App() {
             <Route path="/products" element={<Products />} />
             <Route path="/clients" element={<Clients />} />
             <Route path="/settings" element={<Settings />} />
+
+            <Route path="/invoiceEditor" element={<InvoiceEditor />} />
+
+            <Route path="/notfound" element={<NotFound />} />
           </Route>
 
           <Route path="*" element={<Navigate to="/login" replace />} />

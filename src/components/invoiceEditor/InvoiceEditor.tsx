@@ -3,9 +3,25 @@ import { useProducts } from '@/context/ProductsContext';
 import { Colors } from '@/constants/Colors';
 // ... autres imports
 
+type InvoiceItem = {
+  productId: string;
+  name: string;
+  price: number;
+  quantity: number;
+};
+
+type InvoiceForm = {
+  userName: string;
+  userAddress: string;
+  clientName: string;
+  clientAddress: string;
+  date: string;
+  items: InvoiceItem[];
+};
+
 const InvoiceEditor: React.FC = () => {
   const { products } = useProducts();
-  const [form, setForm] = useState({
+  const [form, setForm] = useState<InvoiceForm>({
     userName: '',
     userAddress: '',
     clientName: '',
