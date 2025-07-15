@@ -17,7 +17,7 @@ import Products from '@/pages/Products';
 import Clients from '@/pages/Clients';
 import Settings from '@/pages/Settings';
 
-import InvoiceEditor from './components/invoiceEditor/InvoiceEditor';
+import InvoiceEditor from './pages/InvoiceEditor';
 
 import NotFound from './pages/NotFound';
 

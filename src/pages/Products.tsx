@@ -19,7 +19,6 @@ export default function Products() {
             cursor: 'pointer',
             fontSize: 16,
           }}
-          // onClick={() => ...}
         >
           Nouveau produit
         </button>
