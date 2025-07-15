@@ -6,12 +6,7 @@ import { Colors } from '@/constants/Colors';
 
 import {useAuth} from '@/context/AuthContext';
 
-/**
- * Page de connexion
- * Première page affichée avec formulaire d'authentification
- */
-
-const Login: React.FC = () => {
+export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -93,8 +88,6 @@ const Login: React.FC = () => {
     </AuthLayout>
   );
 };
-
-export default Login;
 
 const styles = {
   form: {

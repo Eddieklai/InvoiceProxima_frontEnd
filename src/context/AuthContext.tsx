@@ -1,12 +1,12 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import axios from 'axios';
 
-import {loginUser, registerUser, getMe} from '@/services/userServices';
+import { loginUser, registerUser, getMe } from '@/services/userServices';
 
 interface User {
   id: string;
   email: string;
-  name:string;
+  name: string;
   phone: string;
 }
 
@@ -28,28 +28,30 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [error, setError] = useState<string | null>(null);
 
   const checkAuth = async () => {
-  setLoading(true);
-  try {
-    if (user) {
-      setLoading(false);
-      return;
-    }
-    const token = localStorage.getItem('token');
-    if (token) {
-      const res = await getMe();
-      console.log('user connected');
-      setUser(res);
-    } else {
+    setLoading(true);
+    try {
+      if (user) {
+        setLoading(false);
+        return;
+      }
+      const token = localStorage.getItem('token');
+      if (token) {
+        const res = await getMe();
+        console.log('user connected');
+        setUser(res);
+      } else {
+        setUser(null);
+      }
+    } catch (err) {
       setUser(null);
+      setError('Session expirée ou invalide');
+      localStorage.removeItem('token');
+    } finally {
+      setTimeout(() => {
+        setLoading(false);
+      }, 1000);
     }
-  } catch (err) {
-    setUser(null);
-    setError('Session expirée ou invalide');
-    localStorage.removeItem('token');
-  } finally {
-    setLoading(false);
-  }
-};
+  };
 
   useEffect(() => {
     checkAuth();
@@ -66,7 +68,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       setError('Identifiants invalides');
       setUser(null);
     } finally {
-      setLoading(false);
+      setTimeout(() => {
+        setLoading(false);
+      }, 1000);
     }
   };
 
@@ -81,7 +85,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       setError('Erreur lors de l\'inscription');
       setUser(null);
     } finally {
-      setLoading(false);
+      setTimeout(() => {
+        setLoading(false);
+      }, 1000);
     }
   };
 

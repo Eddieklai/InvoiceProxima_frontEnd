@@ -1,16 +1,17 @@
 import React from 'react';
-import { 
-  FileText, 
-  Package, 
-  Users, 
-  BarChart3, 
-  Settings, 
+import {
+  FileText,
+  Package,
+  Users,
+  BarChart3,
+  Settings,
   ArrowRight,
   TrendingUp,
   Euro
 } from 'lucide-react';
 import Layout from '@/components/Layout/Layout';
 import { Colors } from '@/constants/Colors';
+import { useNavigate } from 'react-router-dom';
 
 const tools = [
   {
@@ -28,18 +29,11 @@ const tools = [
     color: Colors.accent,
   },
   {
-    id: 'customers',
+    id: 'clients',
     title: 'Clients',
     description: 'Répertoire de vos clients avec historique des commandes et coordonnées.',
     icon: Users,
     color: Colors.info,
-  },
-  {
-    id: 'analytics',
-    title: 'Tableau de bord',
-    description: 'Statistiques de ventes, graphiques et analyses de performance.',
-    icon: BarChart3,
-    color: Colors.success,
   },
   {
     id: 'settings',
@@ -48,11 +42,19 @@ const tools = [
     icon: Settings,
     color: Colors.darkGray,
   },
+  {
+    id: 'analytics',
+    title: 'Tableau de bord',
+    description: 'Statistiques de ventes, graphiques et analyses de performance.',
+    icon: BarChart3,
+    color: Colors.success,
+  }
 ];
 
 const Dashboard: React.FC = () => {
+  const navigate = useNavigate();
   const handleToolClick = (toolId: string) => {
-    console.log(`Navigation vers ${toolId}`);
+    navigate(`/${toolId}`);
   };
 
   return (
@@ -64,7 +66,7 @@ const Dashboard: React.FC = () => {
               <div style={styles.welcomeContent}>
                 <h1 style={styles.welcomeTitle}>Bienvenue dans InvoiceProxima</h1>
                 <p style={styles.welcomeSubtitle}>
-                  Gérez votre entreprise avec simplicité et efficacité. 
+                  Gérez votre entreprise avec simplicité et efficacité.
                   Accédez à tous vos outils depuis ce tableau de bord.
                 </p>
               </div>
@@ -95,12 +97,25 @@ const Dashboard: React.FC = () => {
             </div>
           </section>
 
+          {/* <section>
+            <button style={{
+              background: Colors.primary,
+              color: Colors.white,
+              padding: '12px 24px',
+              borderRadius: '8px',
+              border: 'none',
+              cursor: 'pointer',
+              marginBottom: '24px'
+            }}>
+              Bouton test api
+            </button>
+          </section> */}
           <div style={styles.toolsGrid}>
             {tools.map((tool) => {
               const IconComponent = tool.icon;
               return (
-                <div 
-                  key={tool.id} 
+                <div
+                  key={tool.id}
                   onClick={() => handleToolClick(tool.id)}
                   style={styles.toolCard}
                 >
