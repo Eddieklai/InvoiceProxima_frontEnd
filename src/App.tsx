@@ -6,6 +6,12 @@ import Login from '@/pages/Login';
 import Register from '@/pages/Register';
 import Dashboard from '@/pages/Dashboard';
 
+import { InvoicesProvider } from '@/context/InvoicesContext';
+import { ClientsProvider } from '@/context/ClientsContext';
+import { ProductsProvider } from '@/context/ProductsContext';
+
+import { ModalProvider } from '@/context/ModalContext';
+
 import Invoices from '@/pages/Invoices';
 import Products from '@/pages/Products';
 import Clients from '@/pages/Clients';
@@ -25,17 +31,20 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
 
-          <Route path="/dashboard" element={
-            <PrivateRoute>
-              <Dashboard />
-            </PrivateRoute>
-          } />
-
           <Route element={
             <PrivateRoute>
-              <PrivateLayout />
+              <InvoicesProvider>
+                <ClientsProvider>
+                  <ProductsProvider>
+                    <ModalProvider>
+                      <PrivateLayout />
+                    </ModalProvider>
+                  </ProductsProvider>
+                </ClientsProvider>
+              </InvoicesProvider>
             </PrivateRoute>
           }>
+            <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/invoices" element={<Invoices />} />
             <Route path="/products" element={<Products />} />
             <Route path="/clients" element={<Clients />} />

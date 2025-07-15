@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   FileText,
   Package,
@@ -12,6 +12,8 @@ import {
 import Layout from '@/components/Layout/Layout';
 import { Colors } from '@/constants/Colors';
 import { useNavigate } from 'react-router-dom';
+
+import { useInvoices } from '@/context/InvoicesContext';
 
 const tools = [
   {
@@ -52,7 +54,21 @@ const tools = [
 ];
 
 const Dashboard: React.FC = () => {
+  const { invoices, loading } = useInvoices();
+  const [numberOfInvoices, setNumberOfInvoices] = React.useState(0);
+  const [totalIncome, setTotalIncome] = React.useState(0);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!loading) {
+      setNumberOfInvoices(invoices.length);
+      setTotalIncome(invoices.reduce((total, invoice) => total + (invoice.total_ttc || 0), 0));
+      if (invoices.length === 0) {
+        console.log('No invoices found, consider creating one.');
+      }
+    }
+  }, [invoices, loading]);
+
   const handleToolClick = (toolId: string) => {
     navigate(`/${toolId}`);
   };
@@ -76,14 +92,14 @@ const Dashboard: React.FC = () => {
               <div style={styles.statCard}>
                 <div style={styles.statValue}>
                   <TrendingUp size={24} />
-                  127
+                  {numberOfInvoices}
                 </div>
                 <div style={styles.statLabel}>Factures ce mois</div>
               </div>
               <div style={styles.statCard}>
                 <div style={styles.statValue}>
                   <Euro size={24} />
-                  3,240€
+                  {totalIncome}€
                 </div>
                 <div style={styles.statLabel}>Chiffre d'affaires</div>
               </div>
