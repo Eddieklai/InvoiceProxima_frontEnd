@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Colors } from '@/constants/Colors';
 
 import EditableTitle from '@/components/invoiceEditor/EditableTitle';
-import EditableLogo from '@/components/invoiceEditor/EditableLogo';
+// import EditableLogo from '@/components/invoiceEditor/EditableLogo';
 import AddressUser from '@/components/invoiceEditor/AdressUser';
 import AdressClient from '@/components/invoiceEditor/AdressClient';
 
@@ -15,14 +15,15 @@ export default function InvoiceEditor() {
   const { products } = useProducts();
 
   const [title, setTitle] = useState('');
-  const [logo, setLogo] = useState('');
+  // const [logo, setLogo] = useState('');
   const [client, setClient] = useState<Client>();
 
   return (
     <div style={styles.wrapper}>
       <div style={styles.a4}>
         <section style={styles.wrapperLogoTitle}>
-          <EditableLogo value={logo} onChange={setLogo}/>
+          {/* <EditableLogo value={logo} onChange={setLogo}/> */}
+          <div/>
           <EditableTitle value={title} onChange={setTitle}/>
         </section>
         <section style={styles.adresses}>
