@@ -3,9 +3,10 @@ import { getProducts, createProduct, updateProduct, deleteProduct } from '@/serv
 
 export interface Product {
   id: string;
+  userId: string;
   name: string;
   price: number;
-  userId: string;
+  tva: number;
   createdAt: string;
   updatedAt: string;
 }

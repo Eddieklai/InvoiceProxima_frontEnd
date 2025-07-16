@@ -7,6 +7,9 @@ interface ModalContextType {
   closeModal: () => void;
 }
 
+type ModalContent = React.ReactNode | (() => React.ReactNode);
+
+
 const ModalContext = createContext<ModalContextType | undefined>(undefined);
 
 export const useModal = () => {
@@ -17,10 +20,10 @@ export const useModal = () => {
 
 export const ModalProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [open, setOpen] = useState(false);
-  const [content, setContent] = useState<ReactNode>(null);
+  const [content, setContent] = useState<ModalContent>(null);
 
-  const openModal = (modalContent: ReactNode) => {
-    setContent(modalContent);
+  const openModal = (modalContent: ModalContent) => {
+    setContent(() => modalContent);
     setOpen(true);
   };
 
@@ -36,7 +39,7 @@ export const ModalProvider: React.FC<{ children: ReactNode }> = ({ children }) =
         <div style={styles.overlay} onClick={closeModal}>
           <div style={styles.modal} onClick={e => e.stopPropagation()}>
             <button style={styles.closeBtn} onClick={closeModal}>×</button>
-            {content}
+            {typeof content === 'function' ? content() : content}
           </div>
         </div>,
         document.body
@@ -55,15 +58,21 @@ const styles = {
     justifyContent: 'center',
     zIndex: 2000,
   },
+  // Dans ModalContext.tsx, adapte le style :
   modal: {
     background: '#fff',
     borderRadius: 12,
-    padding: 32,
-    minWidth: 320,
-    minHeight: 120,
+    padding: 40,
+    minWidth: 700,   // plus large
+    minHeight: 400,  // plus haut
+    maxWidth: '95vw',
+    maxHeight: '90vh',
     boxShadow: '0 8px 32px #0002',
     position: 'relative' as const,
     animation: 'modalFadeIn 0.25s',
+    overflowY: 'auto' as const,
+    display: 'flex',
+    flexDirection: 'column' as const,
   },
   closeBtn: {
     position: 'absolute' as const,
