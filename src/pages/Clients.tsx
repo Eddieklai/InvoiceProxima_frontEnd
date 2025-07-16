@@ -56,7 +56,7 @@ export default function Clients() {
                   <td style={tdStyle}>{client.id}</td>
                   <td style={tdStyle}>{client.name}</td>
                   <td style={tdStyle}>{client.email}</td>
-                  <td style={tdStyle}>{client.adress}</td>
+                  <td style={tdStyle}>{client.address}</td>
                   <td style={tdStyle}>{client.phone}</td>
                   <td style={tdStyle}>
                     <button style={actionBtn}>Voir</button>
