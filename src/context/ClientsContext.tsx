@@ -3,11 +3,15 @@ import { getClients, createClient, updateClient, deleteClient } from '@/services
 
 export interface Client {
   id: string;
-  name: string;
-  email: string;
   userId: string;
-  adress: string;
-  phone: string;
+  name: string;
+  siret?: string;
+  address: string;
+  postalCode?: string;
+  city?: string;
+  email: string;
+  numTva?: string;
+  phone?: string;
   createdAt: string;
   updatedAt: string;
 }

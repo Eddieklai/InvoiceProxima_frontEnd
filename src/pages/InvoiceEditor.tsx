@@ -4,16 +4,19 @@ import { Colors } from '@/constants/Colors';
 import EditableTitle from '@/components/invoiceEditor/EditableTitle';
 import EditableLogo from '@/components/invoiceEditor/EditableLogo';
 import AddressUser from '@/components/invoiceEditor/AdressUser';
+import AdressClient from '@/components/invoiceEditor/AdressClient';
 
 import { useProducts } from '@/context/ProductsContext';
 // import { useClients } from '@/context/ClientsContext';
 
+import type { Client } from '@/context/ClientsContext';
+
 export default function InvoiceEditor() {
   const { products } = useProducts();
-  // const { clients } = useClients();
 
   const [title, setTitle] = useState('');
   const [logo, setLogo] = useState('');
+  const [client, setClient] = useState<Client>();
 
   return (
     <div style={styles.wrapper}>
@@ -27,14 +30,7 @@ export default function InvoiceEditor() {
               <AddressUser />
             </div>
             <div style={{ flex: 1, padding: 16 }}>
-              <h2 style={{ fontSize: 20, fontWeight: 600 }}>Produits</h2>
-              <select style={{ width: '100%', padding: 8, borderRadius: 4, border: `1px solid ${Colors.mediumGray}` }}>
-                {products.map(product => (
-                  <option key={product.id} value={product.id}>
-                    {product.name} - {product.price}€
-                  </option>
-                ))}
-              </select>
+              <AdressClient client={client} onChange={setClient}/>
             </div>
         </section>
         <section style={styles.table}>

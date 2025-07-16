@@ -1,32 +1,22 @@
-import { Colors } from '@/constants/Colors';
-
 import { useAuth } from '@/context/AuthContext';
 
 export default function AdressUser() {
-    const {user} = useAuth();
-    if (!user) return null;
+  const { user } = useAuth();
+  if (!user) return null;
 
   return (
     <div style={styles.container}>
       <div style={styles.companyName}>{user.companyName}</div>
+      <div style={styles.siret}>{user.siret && <>SIRET&nbsp;: <b>{user.siret}</b></>}</div>
       <div style={styles.address}>{user.address}</div>
       {(user.postalCode || user.city || user.country) && (
-          <div style={styles.address}>
+        <div style={styles.address}>
           {[user.postalCode, user.city, user.country].filter(Boolean).join(' ')}
         </div>
       )}
+      <div style={styles.email}>{user.email}</div>
       {user.phone && (
-        <div style={styles.infoLine}>
-          <span style={styles.label}>Téléphone :</span> {user.phone}
-        </div>
-      )}
-      <div style={styles.infoLine}>
-        <span style={styles.label}>Email :</span> {user.email}
-      </div>
-      {user.siret && (
-        <div style={styles.infoLine}>
-          <span style={styles.label}>SIRET :</span> {user.siret}
-        </div>
+        <div style={styles.phone}>Tél&nbsp;: {user.phone}</div>
       )}
     </div>
   );
@@ -34,34 +24,45 @@ export default function AdressUser() {
 
 const styles = {
   container: {
-    background: Colors.secondary,
+    background: '#fff',
     borderRadius: 8,
     padding: '18px 24px',
-    color: Colors.primary,
+    color: '#222',
     fontSize: 15,
     fontWeight: 500,
-    boxShadow: `0 2px 8px ${Colors.shadow}`,
+    boxShadow: '0 2px 8px rgba(0,0,0,0.07)',
     maxWidth: 340,
     marginBottom: 12,
     lineHeight: 1.6,
+    border: '1px solid #eee',
   },
   companyName: {
     fontWeight: 700,
-    fontSize: 18,
-    color: Colors.primary,
-    marginBottom: 4,
+    fontSize: 20,
+    marginBottom: 2,
+    letterSpacing: 0.5,
+  },
+  siret: {
+    fontSize: 14,
+    fontWeight: 500,
+    marginBottom: 6,
+    color: '#555',
   },
   address: {
-    color: Colors.primary,
+    fontSize: 15,
     marginBottom: 2,
+    color: '#222',
   },
-  infoLine: {
-    color: Colors.primary,
+  email: {
+    fontSize: 14,
+    color: '#444',
     marginBottom: 2,
+    fontWeight: 400,
   },
-  label: {
-    fontWeight: 600,
-    color: Colors.primaryLight,
-    marginRight: 4,
+  phone: {
+    fontSize: 13,
+    color: '#666',
+    marginBottom: 2,
+    fontWeight: 400,
   },
 };
