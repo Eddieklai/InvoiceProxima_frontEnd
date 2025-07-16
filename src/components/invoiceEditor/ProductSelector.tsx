@@ -3,11 +3,6 @@ import { useProducts } from '@/context/ProductsContext';
 import { Plus, Trash2 } from 'lucide-react';
 import { Colors } from '@/constants/Colors';
 
-
-import type { Product } from '@/context/ProductsContext';
-import { useModal } from '@/context/ModalContext';
-import { useEffect } from 'react';
-
 type ProductSelectorProps = {
   selectedProducts: { product: any; quantity: number }[];
   setSelectedProducts: React.Dispatch<React.SetStateAction<{ product: any; quantity: number }[]>>;
@@ -15,7 +10,6 @@ type ProductSelectorProps = {
 };
 
 export default function ProductSelector({ selectedProducts, setSelectedProducts, onConfirm }: ProductSelectorProps) {
-  const { closeModal } = useModal();
   const { products } = useProducts();
   const [listProducts, setListProducts] = useState(selectedProducts);
   const [removingIdx, setRemovingIdx] = useState<number | null>(null);
@@ -65,7 +59,6 @@ export default function ProductSelector({ selectedProducts, setSelectedProducts,
     if (onConfirm) {
       onConfirm();
     }
-    closeModal();
   }
 
   return (
