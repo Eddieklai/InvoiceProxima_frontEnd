@@ -4,19 +4,27 @@ export default function AdressUser() {
   const { user } = useAuth();
   if (!user) return null;
 
+  function formatPhone(phone: string) {
+    return phone.replace(/(.{2})/g, '$1 ').trim();
+  }
+
+  function formatSiret(siret: string) {
+  return siret.replace(/^(\d{3})(\d{3})(\d{3})(\d+)$/, '$1 $2 $3 $4').trim();
+}
+
+
   return (
     <div style={styles.container}>
       <div style={styles.companyName}>{user.companyName}</div>
-      <div style={styles.siret}>{user.siret && <>SIRET&nbsp;: <b>{user.siret}</b></>}</div>
       <div style={styles.address}>{user.address}</div>
       {(user.postalCode || user.city || user.country) && (
         <div style={styles.address}>
           {[user.postalCode, user.city, user.country].filter(Boolean).join(' ')}
         </div>
       )}
-      <div style={styles.email}>{user.email}</div>
+      <div style={styles.siret}>{user.siret && <>SIRET&nbsp;: <b>{formatSiret(user.siret)}</b></>}</div>
       {user.phone && (
-        <div style={styles.phone}>Tél&nbsp;: {user.phone}</div>
+        <div style={styles.phone}>Tél&nbsp;: {formatPhone(user.phone)}</div>
       )}
     </div>
   );
