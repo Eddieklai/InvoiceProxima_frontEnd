@@ -57,6 +57,8 @@ function App() {
             <Route path="/invoiceEditor" element={<InvoiceEditor />} />
 
             <Route path="/notfound" element={<NotFound />} />
+            <Route path="/notfound/quote" element={<NotFound />} />
+            <Route path="/notfound/payment" element={<NotFound />} />
           </Route>
 
           <Route path="*" element={<Navigate to="/login" replace />} />
