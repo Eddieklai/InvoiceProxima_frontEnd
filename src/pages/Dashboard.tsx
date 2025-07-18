@@ -3,7 +3,6 @@ import {
   FileText,
   Package,
   Users,
-  BarChart3,
   Settings,
   ArrowRight,
   TrendingUp,
@@ -45,7 +44,7 @@ const tools = [
     icon: Settings,
     color: Colors.darkGray,
   },
-  
+
 ];
 
 const Dashboard: React.FC = () => {
