@@ -6,10 +6,20 @@ import Login from '@/pages/Login';
 import Register from '@/pages/Register';
 import Dashboard from '@/pages/Dashboard';
 
+import { InvoicesProvider } from '@/context/InvoicesContext';
+import { ClientsProvider } from '@/context/ClientsContext';
+import { ProductsProvider } from '@/context/ProductsContext';
+
+import { ModalProvider } from '@/context/ModalContext';
+
 import Invoices from '@/pages/Invoices';
 import Products from '@/pages/Products';
 import Clients from '@/pages/Clients';
 import Settings from '@/pages/Settings';
+
+import InvoiceEditor from './pages/InvoiceEditor';
+
+import NotFound from './pages/NotFound';
 
 import PrivateLayout from './components/Layout/PrivateLayout';
 
@@ -25,43 +35,31 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
 
-          <Route path="/dashboard" element={
+          <Route element={
             <PrivateRoute>
-              <Dashboard />
+              <InvoicesProvider>
+                <ClientsProvider>
+                  <ProductsProvider>
+                    <ModalProvider>
+                      <PrivateLayout />
+                    </ModalProvider>
+                  </ProductsProvider>
+                </ClientsProvider>
+              </InvoicesProvider>
             </PrivateRoute>
-          } />
+          }>
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/invoices" element={<Invoices />} />
+            <Route path="/products" element={<Products />} />
+            <Route path="/clients" element={<Clients />} />
+            <Route path="/settings" element={<Settings />} />
 
-          <Route path="/invoices" element={
-            <PrivateRoute>
-              <PrivateLayout>
-                <Invoices />
-              </PrivateLayout>
-            </PrivateRoute>
-          } />
+            <Route path="/invoiceEditor" element={<InvoiceEditor />} />
 
-          <Route path="/products" element={
-            <PrivateRoute>
-              <PrivateLayout>
-                <Products />
-              </PrivateLayout>
-            </PrivateRoute>
-          } />
-
-          <Route path="/clients" element={
-            <PrivateRoute>
-              <PrivateLayout>
-                <Clients />
-              </PrivateLayout>
-            </PrivateRoute>
-          } />
-
-          <Route path="/settings" element={
-            <PrivateRoute>
-              <PrivateLayout>
-                <Settings />
-              </PrivateLayout>
-            </PrivateRoute>
-          } />
+            <Route path="/notfound" element={<NotFound />} />
+            <Route path="/notfound/quote" element={<NotFound />} />
+            <Route path="/notfound/payment" element={<NotFound />} />
+          </Route>
 
           <Route path="*" element={<Navigate to="/login" replace />} />
         </Routes>

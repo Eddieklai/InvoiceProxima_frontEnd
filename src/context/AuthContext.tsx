@@ -8,6 +8,14 @@ interface User {
   email: string;
   name: string;
   phone: string;
+  companyName: string;
+  postalCode: string;
+  address: string;
+  city: string;
+  country: string;
+  siret: string;
+  createdAt: string;
+  updatedAt: string;
 }
 
 interface AuthContextType {
@@ -16,7 +24,17 @@ interface AuthContextType {
   loading: boolean;
   error: string | null;
   login: (email: string, password: string) => Promise<void>;
-  register: (name: string, phone: string, email: string, password: string) => Promise<void>;
+  register: (
+    phone: string,
+    email: string,
+    password: string,
+    companyName: string,
+    postalCode: string,
+    address: string,
+    city: string,
+    country: string,
+    siret: string
+  ) => Promise<void>;
   logout: () => void;
 }
 
@@ -74,15 +92,25 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
-  const register = async (name: string, phone: string, email: string, password: string) => {
+  const register = async (
+    phone: string,
+    email: string,
+    password: string,
+    companyName: string,
+    postalCode: string,
+    address: string,
+    city: string,
+    country: string,
+    siret: string
+  ) => {
     setLoading(true);
     setError(null);
     try {
-      await registerUser({ name, phone, email, password });
+      await registerUser({ phone, email, password, companyName, postalCode, address, city, country, siret });
       const userData = await getMe();
       setUser(userData);
-    } catch (err) {
-      setError('Erreur lors de l\'inscription');
+    } catch (err: any) {
+      setError(err.message || 'Erreur lors de l\'inscription');
       setUser(null);
     } finally {
       setTimeout(() => {

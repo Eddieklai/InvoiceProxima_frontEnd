@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = import.meta.env.VITE_API_URL_LOCAL;
+const API_URL = import.meta.env.VITE_API_URL;
 
 export const loginUser = async (email: string, password: string) => {
     try {
@@ -20,10 +20,15 @@ export const loginUser = async (email: string, password: string) => {
 }
 
 export const registerUser = async (userData: {
-    name: string;
     phone: string;
     email: string;
     password: string;
+    companyName: string;
+    postalCode: string;
+    address: string;
+    city: string;
+    country: string;
+    siret: string;
 }) => {
     try {
         const response = await axios.post(`${API_URL}/user/register`, userData);
