@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import { getInvoices, createInvoice, updateInvoice, deleteInvoice } from '@/services/invoiceServices';
+import { getInvoices } from '@/services/invoiceServices';
+import { updateInvoice, deleteInvoice } from '@/services/invoiceServices';
 
 interface Invoice {
   id: string;
@@ -54,8 +55,11 @@ export const InvoicesProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   const addInvoice = async (title: string, clientId: string, total_ttc: number) => {
     setLoading(true);
     setError(null);
+    title= title.trim();
+    clientId = clientId.trim();
+    total_ttc = parseFloat(total_ttc.toString());
     try {
-      await createInvoice(title, clientId, total_ttc);
+      // await createInvoice(title, clientId, total_ttc);
       await fetchInvoices();
     } catch (e: any) {
       setError('Erreur lors de la création de la facture');
