@@ -1,13 +1,11 @@
 import React from 'react';
 import { Wheat } from 'lucide-react';
 import { Colors } from '@/constants/Colors';
-
-/**
- * Header principal de l'application
- * Contient le logo et le nom de l'application
- */
+import { useAuth } from '@/context/AuthContext';
 
 const Header: React.FC = () => {
+  const { user, logout } = useAuth();
+
   return (
     <div style={styles.headerContainer}>
       <div style={styles.headerContent}>
@@ -19,6 +17,21 @@ const Header: React.FC = () => {
               <span style={styles.subtitle}>Application de facturation</span>
             </h1>
           </div>
+        </div>
+        <div style={styles.userSection}>
+          {user && (
+            <div style={styles.userInfo}>
+              <span style={styles.userName}>{user.name}</span>
+              <span style={styles.userEmail}>{user.email}</span>
+              <span style={styles.userPhone}>{user.phone}</span>
+            </div>
+          )}
+          <button
+            onClick={logout}
+            style={styles.logoutButton}
+          >
+            Logout
+          </button>
         </div>
       </div>
     </div>
@@ -41,6 +54,7 @@ const styles = {
     margin: '0 auto',
     padding: '0 20px',
     display: 'flex',
+    justifyContent: 'space-between',
     alignItems: 'center',
     gap: '12px',
   },
@@ -65,5 +79,39 @@ const styles = {
     color: Colors.darkGray,
     fontWeight: 400,
     marginLeft: '8px',
+  },
+  userSection: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '16px',
+  },
+  userInfo: {
+    display: 'flex',
+    flexDirection: 'column' as const,
+    alignItems: 'flex-end' as const,
+    marginRight: '8px',
+  },
+  userName: {
+    fontWeight: 600,
+    color: Colors.primary,
+    fontSize: '16px',
+  },
+  userEmail: {
+    fontSize: '13px',
+    color: Colors.darkGray,
+  },
+  userPhone: {
+    fontSize: '13px',
+    color: Colors.darkGray,
+  },
+  logoutButton: {
+    marginTop: 0,
+    padding: '10px 20px',
+    backgroundColor: Colors.primary,
+    color: '#fff',
+    borderRadius: 4,
+    border: 'none',
+    cursor: 'pointer',
+    fontWeight: 500,
   },
 };

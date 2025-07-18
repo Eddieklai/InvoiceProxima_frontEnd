@@ -1,21 +1,19 @@
-import React from 'react';
-import { 
-  FileText, 
-  Package, 
-  Users, 
-  BarChart3, 
-  Settings, 
+import React, { useEffect } from 'react';
+import {
+  FileText,
+  Package,
+  Users,
+  Settings,
   ArrowRight,
   TrendingUp,
   Euro
 } from 'lucide-react';
 import Layout from '@/components/Layout/Layout';
 import { Colors } from '@/constants/Colors';
+import { useNavigate } from 'react-router-dom';
 
-/**
- * Page Dashboard - Tableau de bord principal
- * Affiche les statistiques et les accès rapides aux fonctionnalités
- */
+import { useInvoices } from '@/context/InvoicesContext';
+import { useClients } from '@/context/ClientsContext';
 
 const tools = [
   {
@@ -33,18 +31,11 @@ const tools = [
     color: Colors.accent,
   },
   {
-    id: 'customers',
+    id: 'clients',
     title: 'Clients',
     description: 'Répertoire de vos clients avec historique des commandes et coordonnées.',
     icon: Users,
     color: Colors.info,
-  },
-  {
-    id: 'analytics',
-    title: 'Tableau de bord',
-    description: 'Statistiques de ventes, graphiques et analyses de performance.',
-    icon: BarChart3,
-    color: Colors.success,
   },
   {
     id: 'settings',
@@ -53,11 +44,28 @@ const tools = [
     icon: Settings,
     color: Colors.darkGray,
   },
+
 ];
 
 const Dashboard: React.FC = () => {
+  const { invoices, loading } = useInvoices();
+  const { clients } = useClients();
+  const [numberOfInvoices, setNumberOfInvoices] = React.useState(0);
+  const [totalIncome, setTotalIncome] = React.useState(0);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!loading) {
+      setNumberOfInvoices(invoices.length);
+      setTotalIncome(invoices.reduce((total, invoice) => total + (invoice.total_ttc || 0), 0));
+      if (invoices.length === 0) {
+        console.log('No invoices found, consider creating one.');
+      }
+    }
+  }, [invoices, loading]);
+
   const handleToolClick = (toolId: string) => {
-    console.log(`Navigation vers ${toolId}`);
+    navigate(`/${toolId}`);
   };
 
   return (
@@ -69,7 +77,7 @@ const Dashboard: React.FC = () => {
               <div style={styles.welcomeContent}>
                 <h1 style={styles.welcomeTitle}>Bienvenue dans InvoiceProxima</h1>
                 <p style={styles.welcomeSubtitle}>
-                  Gérez votre entreprise avec simplicité et efficacité. 
+                  Gérez votre entreprise avec simplicité et efficacité.
                   Accédez à tous vos outils depuis ce tableau de bord.
                 </p>
               </div>
@@ -79,33 +87,46 @@ const Dashboard: React.FC = () => {
               <div style={styles.statCard}>
                 <div style={styles.statValue}>
                   <TrendingUp size={24} />
-                  127
+                  {numberOfInvoices}
                 </div>
                 <div style={styles.statLabel}>Factures ce mois</div>
               </div>
               <div style={styles.statCard}>
                 <div style={styles.statValue}>
                   <Euro size={24} />
-                  3,240€
+                  {totalIncome}€
                 </div>
                 <div style={styles.statLabel}>Chiffre d'affaires</div>
               </div>
               <div style={styles.statCard}>
                 <div style={styles.statValue}>
                   <Users size={24} />
-                  89
+                  {clients.length}
                 </div>
                 <div style={styles.statLabel}>Clients actifs</div>
               </div>
             </div>
           </section>
 
+          {/* <section>
+            <button style={{
+              background: Colors.primary,
+              color: Colors.white,
+              padding: '12px 24px',
+              borderRadius: '8px',
+              border: 'none',
+              cursor: 'pointer',
+              marginBottom: '24px'
+            }}>
+              Bouton test api
+            </button>
+          </section> */}
           <div style={styles.toolsGrid}>
             {tools.map((tool) => {
               const IconComponent = tool.icon;
               return (
-                <div 
-                  key={tool.id} 
+                <div
+                  key={tool.id}
                   onClick={() => handleToolClick(tool.id)}
                   style={styles.toolCard}
                 >

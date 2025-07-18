@@ -1,29 +1,32 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { LogIn, Eye, EyeOff } from 'lucide-react';
 import AuthLayout from '@/components/Auth/AuthLayout';
 import { Colors } from '@/constants/Colors';
 
-/**
- * Page de connexion
- * Première page affichée avec formulaire d'authentification
- */
+import {useAuth} from '@/context/AuthContext';
 
-const Login: React.FC = () => {
+export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+
   const navigate = useNavigate();
+  const { login, isAuthenticated } = useAuth();
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate('/dashboard');
+    }
+  }, [isAuthenticated])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-    
-    // Simulation d'une authentification
+    login(email, password);
     setTimeout(() => {
       setIsLoading(false);
-      navigate('/dashboard');
     }, 1500);
   };
 
@@ -85,8 +88,6 @@ const Login: React.FC = () => {
     </AuthLayout>
   );
 };
-
-export default Login;
 
 const styles = {
   form: {
