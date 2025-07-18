@@ -25,6 +25,7 @@ export default function Register() {
     e.preventDefault();
     setFormError(null);
     for (const [key, value] of Object.entries(form)) {
+      key;
       if (!value) {
         setFormError('Tous les champs sont obligatoires.');
         return;
