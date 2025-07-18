@@ -115,6 +115,9 @@ export default function ProductSelector({ selectedProducts, setSelectedProducts,
               onChange={e => handleQtyChange(idx, Number(e.target.value))}
               style={styles.qtyInput}
             />
+            <span style={{ flex: 1, fontSize: 15, color: Colors.darkGray }}>
+              Prix unitaire : {item.product.price ? item.product.price + '€' : 'Aucun produit sélectionné'}
+            </span>
             <span style={{ fontSize: 14, minWidth: 90, textAlign: 'right' }}>
               {item.product
                 ? <>
@@ -122,7 +125,7 @@ export default function ProductSelector({ selectedProducts, setSelectedProducts,
                   TVA : {(item.product.price * item.quantity * 0.2).toFixed(2)}€<br />
                   TTC : {(item.product.price * item.quantity * 1.2).toFixed(2)}€
                 </>
-                : <span style={{ color: Colors.mediumGray }}>Prix</span>
+                : <span style={{ color: Colors.mediumGray }}>prix</span>
               }
             </span>
             <button
@@ -159,6 +162,7 @@ const styles = {
   productBox: {
     display: 'flex',
     alignItems: 'center',
+    width: '100vh',
     background: Colors.white,
     borderRadius: 8,
     boxShadow: `0 2px 8px ${Colors.shadow}`,

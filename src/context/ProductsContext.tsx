@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import { getProducts, createProduct, updateProduct, deleteProduct } from '@/services/productServices';
+import { getProducts } from '@/services/productServices';
+// import { createProduct, updateProduct, deleteProduct } from '@/services/productServices';
 
 export interface Product {
   id: string;
@@ -33,6 +34,7 @@ export const ProductsProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     setError(null);
     try {
       const data = await getProducts();
+      console.log('Fetched products:', data);
       setProducts(data);
     } catch (e: any) {
       setError('Erreur lors du chargement des produits');
@@ -44,8 +46,10 @@ export const ProductsProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   const addProduct = async (name: string, price: number) => {
     setLoading(true);
     setError(null);
+    name = name.trim();
+    price = parseFloat(price.toString());
     try {
-      await createProduct(name, price);
+      // await createProduct(name, price);
       await fetchProducts();
     } catch (e: any) {
       setError('Erreur lors de la création du produit');
@@ -57,8 +61,10 @@ export const ProductsProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   const editProduct = async (id: string, data: Partial<Omit<Product, 'id'>>) => {
     setLoading(true);
     setError(null);
+    id = id.trim();
+    data.name = data.name?.trim();
     try {
-      await updateProduct(id, data);
+      // await updateProduct(id, data);
       await fetchProducts();
     } catch (e: any) {
       setError('Erreur lors de la modification du produit');
@@ -70,8 +76,9 @@ export const ProductsProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   const removeProduct = async (id: string) => {
     setLoading(true);
     setError(null);
+    id = id.trim();
     try {
-      await deleteProduct(id);
+      // await deleteProduct(id);
       await fetchProducts();
     } catch (e: any) {
       setError('Erreur lors de la suppression du produit');

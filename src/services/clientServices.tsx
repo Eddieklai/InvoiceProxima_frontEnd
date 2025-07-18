@@ -1,15 +1,19 @@
 import axios from 'axios';
 
-const API_URL = import.meta.env.VITE_API_URL_LOCAL;
+const API_URL = import.meta.env.VITE_API_URL;
 
-export const createClient = async (name: string, email: string, adress: string, phone: string) => {
+export const createClient = async (data: {
+    name: string;
+    siret: string;
+    address: string;
+    postalCode: string;
+    city: string;
+    numTva?: string;
+    phone?: string;
+    email?: string;
+}) => {
     try {
-        const response = await axios.post(`${API_URL}/client`, {
-            name,
-            email,
-            adress,
-            phone,
-        });
+        const response = await axios.post(`${API_URL}/client`, data);
         if (response.status !== 201) {
             throw new Error('Client creation failed');
         }
@@ -37,7 +41,7 @@ export const getClients = async () => {
     }
 }
 
-export const updateClient = async (id: string, data: { name?: string; email?: string; adress?: string; phone?: string }) => {
+export const updateClient = async (id: string, data: { name?: string; email?: string; address?: string; phone?: string }) => {
     try {
         const response = await axios.put(`${API_URL}/client/${id}`, data);
         if (response.status !== 200) {

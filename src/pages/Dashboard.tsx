@@ -14,6 +14,7 @@ import { Colors } from '@/constants/Colors';
 import { useNavigate } from 'react-router-dom';
 
 import { useInvoices } from '@/context/InvoicesContext';
+import { useClients } from '@/context/ClientsContext';
 
 const tools = [
   {
@@ -44,17 +45,12 @@ const tools = [
     icon: Settings,
     color: Colors.darkGray,
   },
-  {
-    id: 'analytics',
-    title: 'Tableau de bord',
-    description: 'Statistiques de ventes, graphiques et analyses de performance.',
-    icon: BarChart3,
-    color: Colors.success,
-  }
+  
 ];
 
 const Dashboard: React.FC = () => {
   const { invoices, loading } = useInvoices();
+  const { clients } = useClients();
   const [numberOfInvoices, setNumberOfInvoices] = React.useState(0);
   const [totalIncome, setTotalIncome] = React.useState(0);
   const navigate = useNavigate();
@@ -106,7 +102,7 @@ const Dashboard: React.FC = () => {
               <div style={styles.statCard}>
                 <div style={styles.statValue}>
                   <Users size={24} />
-                  89
+                  {clients.length}
                 </div>
                 <div style={styles.statLabel}>Clients actifs</div>
               </div>

@@ -1,8 +1,83 @@
 import { Colors } from '@/constants/Colors';
+import { Eye, Edit2, Trash2 } from 'lucide-react';
+import { createProduct, updateProduct, deleteProduct } from '@/services/productServices';
+
 import { useProducts } from '@/context/ProductsContext';
+import { useModal } from '@/context/ModalContext';
 
 export default function Products() {
   const { products, loading } = useProducts();
+
+  const { openModal } = useModal();
+
+  const handleView = (product: any) => {
+    openModal(
+      <div style={{ padding: 24 }}>
+        <h2 style={{ marginBottom: 16 }}>Détails du produit</h2>
+        <p><strong>Nom :</strong> {product.name}</p>
+        <p><strong>Prix :</strong> {product.price} €</p>
+        <p><strong>TVA :</strong> {product.tva ?? 'Non renseignée'} %</p>
+        <p><strong>Description :</strong> {product.description ?? 'Non renseignée'}</p>
+      </div>
+    );
+  };
+
+  const handleEdit = (product: any) => {
+    openModal(
+      <div style={{ padding: 24 }}>
+        <h2 style={{ marginBottom: 16 }}>Éditer le produit</h2>
+        <form onSubmit={async (e) => {
+          e.preventDefault();
+          const formData = new FormData(e.target as HTMLFormElement);
+          const data = {
+            name: formData.get('name') as string,
+            price: Number(formData.get('price')),
+            tva: Number(formData.get('tva')),
+            description: formData.get('description') as string,
+          };
+          await updateProduct(product.id, data);
+        }}>
+          <input name="name" defaultValue={product.name} placeholder="Nom" required />
+          <input name="price" type="number" step="0.01" defaultValue={product.price} placeholder="Prix" required />
+          <input name="tva" type="number" step="0.01" defaultValue={product.tva} placeholder="TVA (%)" />
+          <input name="description" defaultValue={product.description} placeholder="Description" />
+          <button type="submit" style={btnStyle}>Enregistrer</button>
+        </form>
+      </div>
+    );
+  };
+
+  const handleDelete = async (product: any) => {
+    if (window.confirm(`Supprimer le produit ${product.name} ?`)) {
+      await deleteProduct(product.id);
+      // Rafraîchis la liste après suppression si besoin
+    }
+  };
+
+  const handleCreateProduct = () => {
+    openModal(
+      <div style={{ padding: 24 }}>
+        <h2 style={{ marginBottom: 16 }}>Créer un nouveau produit</h2>
+        <form onSubmit={async (e) => {
+          e.preventDefault();
+          const formData = new FormData(e.target as HTMLFormElement);
+          const data = {
+            name: formData.get('name') as string,
+            price: Number(formData.get('price')),
+            tva: Number(formData.get('tva')),
+            description: formData.get('description') as string,
+          };
+          await createProduct(data);
+        }}>
+          <input name="name" placeholder="Nom" required />
+          <input name="price" type="number" step="0.01" placeholder="Prix" required />
+          <input name="tva" type="number" step="0.01" placeholder="TVA (%)" />
+          <input name="description" placeholder="Description" />
+          <button type="submit" style={btnStyle}>Enregistrer</button>
+        </form>
+      </div>
+    );
+  };
 
   return (
     <>
@@ -19,6 +94,7 @@ export default function Products() {
             cursor: 'pointer',
             fontSize: 16,
           }}
+          onClick={handleCreateProduct}
         >
           Nouveau produit
         </button>
@@ -54,9 +130,11 @@ export default function Products() {
                   <td style={tdStyle}>{product.name}</td>
                   <td style={tdStyle}>{product.price}€</td>
                   <td style={tdStyle}>
-                    <button style={actionBtn}>Voir</button>
-                    <button style={actionBtn}>Edit</button>
-                    <button style={actionBtn}>Suppr</button>
+                    <td style={tdStyle}>
+                      <button style={iconBtn} title="Voir" onClick={() => handleView(product)}><Eye size={18} /></button>
+                      <button style={iconBtn} title="Éditer" onClick={() => handleEdit(product)}><Edit2 size={18} /></button>
+                      <button style={iconBtn} title="Supprimer" onClick={() => handleDelete(product)}><Trash2 size={18} /></button>
+                    </td>
                   </td>
                 </tr>
               ))
@@ -82,13 +160,22 @@ const tdStyle = {
   color: Colors.text,
 };
 
-const actionBtn = {
-  marginRight: 8,
-  background: Colors.secondary,
-  color: Colors.primary,
+const btnStyle = {
   border: 'none',
   borderRadius: 6,
-  padding: '6px 12px',
-  cursor: 'pointer',
+  padding: '8px 18px',
   fontWeight: 500,
+  cursor: 'pointer',
+  fontSize: 15,
+};
+
+const iconBtn = {
+  ...btnStyle,
+  background: Colors.primaryLight,
+  color: Colors.primary,
+  padding: '6px 10px',
+  marginRight: 6,
+  display: 'inline-flex',
+  alignItems: 'center',
+  justifyContent: 'center',
 };

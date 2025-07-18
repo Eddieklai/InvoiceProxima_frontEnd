@@ -2,16 +2,18 @@ import React, { useState } from 'react';
 import { Colors } from '@/constants/Colors';
 import { useInvoices } from '@/context/InvoicesContext';
 import { useModal } from '@/context/ModalContext';
-import { Eye, Edit2, Trash2, Plus } from 'lucide-react';
+import { Eye, Edit2, Trash2, Plus, Download } from 'lucide-react';
 
 import { useNavigate } from 'react-router-dom';
+
+import {downloadInvoice} from '@/services/invoiceServices';
 
 const Factures: React.FC = () => {
     const navigate = useNavigate();
     const { openModal, closeModal } = useModal();
     const { invoices, loading, editInvoice, removeInvoice, error } = useInvoices();
 
-    // --- Formulaire réutilisable pour création/édition ---
+
     function InvoiceForm({ onSubmit, initial }: { onSubmit: (data: any) => void, initial?: any }) {
         const [form, setForm] = useState({
             clientId: initial?.clientId || '',
@@ -93,7 +95,6 @@ const Factures: React.FC = () => {
         );
     }
 
-    // --- Détail facture ---
     function InvoiceDetails({ invoice }: { invoice: any }) {
         return (
             <div style={{ minWidth: 340 }}>
@@ -122,6 +123,10 @@ const Factures: React.FC = () => {
         openModal(<InvoiceDetails invoice={invoice} />);
     };
 
+    const handleDownload = async (invoice: any) => {
+        await downloadInvoice(invoice);
+    };
+
     const handleDelete = (invoice: any) => {
         openModal(
             <div style={{ minWidth: 320 }}>
@@ -140,13 +145,21 @@ const Factures: React.FC = () => {
         );
     };
 
-    // --- Statut coloré ---
     const statusColor = (status: string) => {
         switch (status) {
             case 'paid': return { color: Colors.success, fontWeight: 600 };
             case 'unpaid': return { color: Colors.error, fontWeight: 600 };
             case 'pending': return { color: Colors.warning, fontWeight: 600 };
             default: return { color: Colors.text };
+        }
+    };
+
+    const statusFromEng = (status: string) => {
+        switch (status) {
+            case 'paid': return 'Payée';
+            case 'unpaid': return 'Impayée';
+            case 'pending': return 'En attente';
+            default: return 'Inconnue';
         }
     };
 
@@ -205,11 +218,12 @@ const Factures: React.FC = () => {
                                 <tr key={inv.id} style={{ borderBottom: `1px solid ${Colors.mediumGray}`, transition: 'background 0.2s' }}>
                                     <td style={tdStyle}>{inv.client?.name || inv.clientId}</td>
                                     <td style={tdStyle}>{inv.title}</td>
-                                    <td style={tdStyle}>{inv.total_ttc}€</td>
-                                    <td style={{ ...tdStyle, ...statusColor(inv.status) }}>{inv.status}</td>
+                                    <td style={tdStyle}>{inv.total_ttc.toFixed(2)}€</td>
+                                    <td style={{ ...tdStyle, ...statusColor(inv.status) }}>{statusFromEng(inv.status)}</td>
                                     <td style={tdStyle}>
                                         <button style={iconBtn} title="Voir" onClick={() => handleView(inv)}><Eye size={18} /></button>
                                         <button style={iconBtn} title="Éditer" onClick={() => handleEdit(inv)}><Edit2 size={18} /></button>
+                                        <button style={iconBtn} title="Télécharger" onClick={() => handleDownload(inv)}><Download size={18}/></button>
                                         <button style={iconBtn} title="Supprimer" onClick={() => handleDelete(inv)}><Trash2 size={18} /></button>
                                     </td>
                                 </tr>

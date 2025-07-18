@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import { getClients, createClient, updateClient, deleteClient } from '@/services/clientServices';
+import { getClients } from '@/services/clientServices';
+// import { createClient, updateClient, deleteClient } from '@/services/clientServices';
 
 export interface Client {
   id: string;
@@ -50,7 +51,9 @@ export const ClientsProvider: React.FC<{ children: React.ReactNode }> = ({ child
     setLoading(true);
     setError(null);
     try {
-      await createClient(name, email, adress, phone);
+      const data = { name, email, adress, phone };
+      data.name = data.name.trim();
+      // await createClient(data);
       await fetchClients();
     } catch (e: any) {
       setError('Erreur lors de la création du client');
@@ -62,8 +65,10 @@ export const ClientsProvider: React.FC<{ children: React.ReactNode }> = ({ child
   const editClient = async (id: string, data: Partial<Omit<Client, 'id'>>) => {
     setLoading(true);
     setError(null);
+    id = id.trim();
+    data.name = data.name?.trim();
     try {
-      await updateClient(id, data);
+      // await updateClient(id, data);
       await fetchClients();
     } catch (e: any) {
       setError('Erreur lors de la modification du client');
@@ -75,8 +80,9 @@ export const ClientsProvider: React.FC<{ children: React.ReactNode }> = ({ child
   const removeClient = async (id: string) => {
     setLoading(true);
     setError(null);
+    id = id.trim();
     try {
-      await deleteClient(id);
+      // await deleteClient(id);
       await fetchClients();
     } catch (e: any) {
       setError('Erreur lors de la suppression du client');

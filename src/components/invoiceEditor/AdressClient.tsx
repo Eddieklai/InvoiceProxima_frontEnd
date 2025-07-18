@@ -68,7 +68,6 @@ export default function AdressClient({ client, onChange }: { client?: Client, on
                 <div>
                     <div style={styles.header}>
                         <div style={styles.companyName}>{client.name}</div>
-                        <button style={styles.changeBtn} >Changer</button>
                     </div>
                     <div style={styles.address}>{client.address}</div>
                     <div style={styles.infoLine}>
