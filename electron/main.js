@@ -14,6 +14,10 @@ function createWindow() {
     // Enable auto-updates
     win.loadFile(path.join(__dirname, '..', 'dist', 'index.html'));
     autoUpdater.checkForUpdatesAndNotify();
+
+    win.on('closed', () => {
+        app.quit(); // Ajouté ici
+    });
 }
 
 // Handle auto-updates events
