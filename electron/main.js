@@ -1,4 +1,4 @@
-const { app, BrowserWindow } = require('electron');
+const { app, BrowserWindow, dialog } = require('electron');
 const { autoUpdater } = require('electron-updater');
 const path = require('path');
 
@@ -13,7 +13,12 @@ function createWindow() {
 
     // Enable auto-updates
     win.loadFile(path.join(__dirname, '..', 'dist', 'index.html'));
-    autoUpdater.checkForUpdatesAndNotify();
+
+    setTimeout(() => {
+        console.log('🚀 Checking for updates...');
+        console.log('🔗 Feed URL:', autoUpdater.getFeedURL?.() || 'N/A');
+        autoUpdater.checkForUpdatesAndNotify();
+    }, 3000);
 
     win.on('closed', () => {
         app.quit(); // Ajouté ici
