@@ -31,6 +31,8 @@ jobs:
 
       - name: Build app
         run: npm run build
+        env:
+          VITE_API_URL: ${{ secrets.VITE_API_URL }}
 
       - name: Build Electron app
         run: npx electron-builder --publish always
