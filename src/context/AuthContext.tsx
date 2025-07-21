@@ -23,6 +23,7 @@ interface AuthContextType {
   isAuthenticated: boolean;
   loading: boolean;
   error: string | null;
+  setError: (error: string | null) => void;
   login: (email: string, password: string) => Promise<void>;
   register: (
     phone: string,
@@ -79,7 +80,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setLoading(true);
     setError(null);
     try {
-      await loginUser(email, password);
+      const response = await loginUser(email, password);
+      if (response.status === 'error') {
+        setError(response.message || 'Erreur lors de la connexion.');
+        setUser(null);
+        return;
+      }
       const userData = await getMe();
       setUser(userData);
     } catch (err) {
@@ -126,7 +132,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   return (
-    <AuthContext.Provider value={{ user, isAuthenticated: !!user, loading, error, login, register, logout }}>
+    <AuthContext.Provider value={{ user, isAuthenticated: !!user, loading, error, setError, login, register, logout }}>
       {children}
     </AuthContext.Provider>
   );

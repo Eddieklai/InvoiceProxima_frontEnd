@@ -49,7 +49,6 @@ autoUpdater.on('download-progress', (progressObj) => {
 autoUpdater.on('update-downloaded', () => {
     console.log('📁 Mise à jour téléchargée.');
 
-    // 💬 Demande à l’utilisateur s’il veut relancer maintenant
     const result = dialog.showMessageBoxSync({
         type: 'question',
         buttons: ['Redémarrer maintenant', 'Plus tard'],

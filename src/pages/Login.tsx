@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { LogIn, Eye, EyeOff } from 'lucide-react';
+import styled from 'styled-components';
+import { useNavigate } from 'react-router-dom';
+import { LogIn, Eye, EyeOff, Mail, Loader2 } from 'lucide-react';
 import AuthLayout from '@/components/Auth/AuthLayout';
-import { Colors } from '@/constants/Colors';
-
-import {useAuth} from '@/context/AuthContext';
+import Link from '@/components/ui/Link';
+import Button from '@/components/ui/Button';
+import Input from '@/components/ui/Input';
+import { useAuth } from '@/context/AuthContext';
 
 export default function Login() {
   const [email, setEmail] = useState('');
@@ -13,21 +15,30 @@ export default function Login() {
   const [isLoading, setIsLoading] = useState(false);
 
   const navigate = useNavigate();
-  const { login, isAuthenticated } = useAuth();
+  const { login, isAuthenticated, error, setError } = useAuth();
 
   useEffect(() => {
     if (isAuthenticated) {
       navigate('/dashboard');
     }
-  }, [isAuthenticated])
+  }, [isAuthenticated]);
+
+  useEffect(() => {
+    if (error) {
+      const timer = setTimeout(() => setError(null), 5000);
+      return () => clearTimeout(timer);
+    }
+  }, [error]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-    login(email, password);
-    setTimeout(() => {
+    try {
+      await login(email, password);
+    } catch (err: any) {
+    } finally {
       setIsLoading(false);
-    }, 1500);
+    }
   };
 
   return (
@@ -37,127 +48,131 @@ export default function Login() {
       heroTitle="Gérez vos factures avec simplicité"
       heroSubtitle="Une solution moderne et intuitive pour gérer vos factures, clients et produits. Conçue spécialement."
     >
-      <form onSubmit={handleSubmit} style={styles.form}>
-        <div style={styles.formGroup}>
-          <label htmlFor="email" style={styles.label}>Adresse email</label>
-          <input
-            id="email"
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="votre@email.com"
-            required
-            style={styles.input}
-          />
-        </div>
+      <Form onSubmit={handleSubmit}>
+        <Input
+          id="email"
+          type="email"
+          label="Adresse email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          iconLeft={<Mail size={20} />}
+          required
+        />
 
-        <div style={styles.formGroup}>
-          <label htmlFor="password" style={styles.label}>Mot de passe</label>
-          <div style={styles.passwordWrapper}>
-            <input
-              id="password"
-              type={showPassword ? 'text' : 'password'}
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="Votre mot de passe"
-              required
-              style={styles.input}
-            />
-            <button
+        <Input
+          id="password"
+          type={showPassword ? 'text' : 'password'}
+          label="Mot de passe"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          iconLeft={
+            <PasswordToggle
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              style={styles.passwordToggle}
             >
               {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
-            </button>
-          </div>
-        </div>
+            </PasswordToggle>
+          }
+          required
+        />
 
-        <button type="submit" disabled={isLoading} style={styles.submitButton}>
-          <LogIn size={20} />
-          {isLoading ? 'Connexion...' : 'Se connecter'}
-        </button>
+        <Button
+          variant="primary"
+          loading={isLoading}
+          disabled={isLoading}
+          iconLeft={<LogIn size={20} />}
+        >
+          {isLoading ? 'Connexion en cours...' : 'Se connecter'}
+        </Button>
+        {isLoading && (
+          <LoaderWrapper>
+            <SpinnerIcon>
+              <Loader2 size={22} />
+            </SpinnerIcon>
+            Connexion au serveur... (cela peut prendre quelques secondes)
+          </LoaderWrapper>
+        )}
+        {error && (
+          <ErrorMsg>
+            <EyeOff size={20} style={{ marginRight: 8 }} />
+            {error}
+          </ErrorMsg>
+        )}
 
-        <div style={styles.divider}>
+        <Divider>
           Pas encore de compte ?{' '}
-          <Link to="/register" style={styles.registerLink}>
-            Créer un compte
-          </Link>
-        </div>
-      </form>
+          <Link to="/register" $variant="primary">Créer un compte</Link>
+        </Divider>
+      </Form>
     </AuthLayout>
   );
-};
+}
 
-const styles = {
-  form: {
-    display: 'flex',
-    flexDirection: 'column' as const,
-    gap: '4px',
-  },
-  formGroup: {
-    marginBottom: '20px',
-  },
-  label: {
-    display: 'block',
-    marginBottom: '8px',
-    fontWeight: 500,
-    color: Colors.text,
-    fontSize: '14px',
-  },
-  input: {
-    width: '100%',
-    padding: '12px 16px',
-    border: `2px solid ${Colors.mediumGray}`,
-    borderRadius: '8px',
-    fontSize: '15px',
-    transition: 'all 0.3s ease',
-    background: Colors.white,
-    fontFamily: 'inherit',
-  },
-  passwordWrapper: {
-    position: 'relative' as const,
-  },
-  passwordToggle: {
-    position: 'absolute' as const,
-    right: '12px',
-    top: '50%',
-    transform: 'translateY(-50%)',
-    background: 'none',
-    border: 'none',
-    color: Colors.darkGray,
-    cursor: 'pointer',
-    padding: '4px',
-    borderRadius: '4px',
-    transition: 'color 0.3s ease',
-  },
-  submitButton: {
-    width: '100%',
-    marginTop: '8px',
-    padding: '12px 24px',
-    borderRadius: '8px',
-    fontWeight: 500,
-    fontSize: '15px',
-    transition: 'all 0.3s ease',
-    display: 'inline-flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: '8px',
-    background: Colors.primary,
-    color: Colors.white,
-    border: `1px solid ${Colors.primary}`,
-    cursor: 'pointer',
-  },
-  divider: {
-    textAlign: 'center' as const,
-    margin: '24px 0',
-    color: Colors.darkGray,
-    fontSize: '14px',
-  },
-  registerLink: {
-    color: Colors.primary,
-    fontWeight: 500,
-    textDecoration: 'none',
-    transition: 'color 0.3s ease',
-  },
-};
+// --- styled-components ---
+
+const Form = styled.form`
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+`;
+
+const Divider = styled.div`
+  text-align: center;
+  margin: 24px 0;
+  color: ${({ theme }) => theme.colors.darkGray};
+  font-size: 14px;
+`;
+
+const LoaderWrapper = styled.div`
+  margin: 24px 0 0 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  color: ${({ theme }) => theme.colors.primary};
+  font-size: 15px;
+  font-weight: 500;
+  opacity: 0.9;
+`;
+
+const SpinnerIcon = styled.span`
+  display: flex;
+  align-items: center;
+  svg {
+    animation: spin 1s linear infinite;
+  }
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+`;
+
+const ErrorMsg = styled.div`
+  margin: 24px 0 0 0;
+  color: ${({ theme }) => theme.colors.error};
+  text-align: center;
+  font-weight: 600;
+  background: ${({ theme }) => theme.colors.error}18;
+  border: 1.5px solid ${({ theme }) => theme.colors.error};
+  border-radius: 10px;
+  padding: 14px 24px;
+  box-shadow: 0 2px 12px ${({ theme }) => theme.colors.error}22;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  animation: fadeIn 0.5s;
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-12px);}
+    to { opacity: 1; transform: translateY(0);}
+  }
+`;
+
+const PasswordToggle = styled.button`
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: ${({ theme }) => theme.colors.darkGray};
+  border-radius: 4px;
+  transition: color 0.3s;
+`;
