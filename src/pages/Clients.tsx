@@ -1,14 +1,45 @@
 import { Colors } from '@/constants/Colors';
 import { Eye, Edit2, Trash2 } from 'lucide-react';
 import { useClients } from '@/context/ClientsContext';
+import { styled } from 'styled-components';
 
 import { createClient, updateClient, deleteClient } from '@/services/clientServices';
+
+import { Table } from '@/components/ui/Table';
+import Input from '@/components/ui/Input';
+import FormGroup from '@/components/ui/FormGroup';
+import Button from '@/components/ui/Button';
+import IconButton from '@/components/ui/IconButton';
+
 
 import { useModal } from '@/context/ModalContext';
 
 export default function Clients() {
   const { clients, loading } = useClients();
   const { openModal } = useModal();
+
+  const columns = [
+    // { label: '#', accessor: 'id' },
+    { label: 'Nom', accessor: 'name' },
+    { label: 'Email', accessor: 'email' },
+    { label: 'Adresse', accessor: 'address' },
+    {
+      label: 'Actions',
+      render: (client: any) => (
+        <div style={{ display: 'flex', gap: 8 }}>
+          <IconButton onClick={() => handleView(client)} title="Voir">
+            <Eye size={18} />
+          </IconButton>
+          <IconButton onClick={() => handleEdit(client)} title="Modifier" variant='neutral'>
+            <Edit2 size={18} />
+          </IconButton>
+          <IconButton onClick={() => handleDelete(client)} title="Supprimer" variant='danger'>
+            <Trash2 size={18} />
+          </IconButton>
+        </div>
+      ),
+    },
+  ];
 
   const handleCreateClient = async () => {
     openModal(
@@ -32,15 +63,43 @@ export default function Clients() {
           // Pour l'édition
           // await updateClient(client.id, data);
         }}>
-          <input name="name" placeholder="Nom" required />
-          <input name="siret" placeholder="SIRET" required />
-          <input name="address" placeholder="Adresse" required />
-          <input name="postalCode" placeholder="Code postal" required />
-          <input name="city" placeholder="Ville" required />
-          <input name="numTva" placeholder="Numéro TVA (optionnel)" />
-          <input name="phone" placeholder="Téléphone" />
-          <input name="email" type="email" placeholder="Email" />
-          <button type="submit">Enregistrer</button>
+          <FormGroup label="Nom" htmlFor="name">
+            <Input name="name" placeholder="Nom" required />
+          </FormGroup>
+          <FormGroup label="SIRET" htmlFor="siret">
+            <Input name="siret" placeholder="SIRET" required />
+          </FormGroup>
+          <FormGroup label="Adresse" htmlFor="address">
+            <Input name="address" placeholder="Adresse" required />
+          </FormGroup>
+          <Row>
+            <Half>
+              <FormGroup label="Code postal" htmlFor="postalCode">
+                <Input name="postalCode" placeholder="Code postal" required />
+              </FormGroup>
+            </Half>
+            <Half>
+              <FormGroup label="Ville" htmlFor="city">
+                <Input name="city" placeholder="Ville" required />
+              </FormGroup>
+            </Half>
+          </Row>
+          <Row>
+            <Half>
+              <FormGroup label="Téléphone" htmlFor="phone">
+                <Input name="phone" placeholder="Téléphone" />
+              </FormGroup>
+            </Half>
+            <Half>
+              <FormGroup label="Email" htmlFor="email">
+                <Input name="email" type="email" placeholder="Email" required />
+              </FormGroup>
+            </Half>
+          </Row>
+          <FormGroup label="Numéro TVA (optionnel)" htmlFor="numTva">
+            <Input name="numTva" placeholder="Numéro TVA" />
+          </FormGroup>
+          <Button type="submit">Enregistrer</Button>
         </form>
       </div>
     )
@@ -95,21 +154,7 @@ export default function Clients() {
     <>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 32 }}>
         <h1 style={{ fontSize: 32, fontWeight: 700 }}>Clients</h1>
-        <button
-          style={{
-            background: Colors.primary,
-            color: Colors.white,
-            border: 'none',
-            borderRadius: 8,
-            padding: '12px 24px',
-            fontWeight: 600,
-            cursor: 'pointer',
-            fontSize: 16,
-          }}
-          onClick={() => handleCreateClient()}
-        >
-          Nouveau client
-        </button>
+        <Button onClick={handleCreateClient}>Nouveau client</Button>
       </div>
       <div style={{
         background: Colors.white,
@@ -117,79 +162,23 @@ export default function Clients() {
         boxShadow: `0 2px 8px ${Colors.shadow}`,
         padding: 24,
       }}>
-        <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-          <thead>
-            <tr style={{ background: Colors.primaryLight }}>
-              <th style={thStyle}>#</th>
-              <th style={thStyle}>Nom</th>
-              <th style={thStyle}>Email</th>
-              <th style={thStyle}>Adresse</th>
-              <th style={thStyle}>Téléphone</th>
-              <th style={thStyle}>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {loading ? (
-              <tr>
-                <td colSpan={6} style={{ textAlign: 'center', padding: 32 }}>Chargement...</td>
-              </tr>
-            ) : clients.length === 0 ? (
-              <tr>
-                <td colSpan={6} style={{ textAlign: 'center', padding: 32 }}>Aucun client</td>
-              </tr>
-            ) : (
-              clients.map((client) => (
-                <tr key={client.id} style={{ borderBottom: `1px solid ${Colors.mediumGray}` }}>
-                  <td style={tdStyle}>{client.id}</td>
-                  <td style={tdStyle}>{client.name}</td>
-                  <td style={tdStyle}>{client.email}</td>
-                  <td style={tdStyle}>{client.address}</td>
-                  <td style={tdStyle}>{client.phone}</td>
-                  <td style={tdStyle}>
-                    <button style={iconBtn} title="Voir" onClick={() => handleView(client)}><Eye size={18} /></button>
-                    <button style={iconBtn} title="Éditer" onClick={() => handleEdit(client)}><Edit2 size={18} /></button>
-                    <button style={iconBtn} title="Supprimer" onClick={() => handleDelete(client)}><Trash2 size={18} /></button>
-                  </td>
-                </tr>
-              ))
-            )}
-          </tbody>
-        </table>
+        <Table
+          columns={columns}
+          data={clients}
+          loading={loading}
+          emptyText="Aucun client trouvé"
+        />
       </div>
     </>
   );
 }
 
-const thStyle = {
-  padding: '12px 8px',
-  fontWeight: 700,
-  color: Colors.primary,
-  textAlign: 'left' as const,
-  fontSize: 15,
-};
+const Row = styled.tr`
+  display: flex;
+  gap: 16px;
+  width: 100%;
+  `
 
-const tdStyle = {
-  padding: '10px 8px',
-  fontSize: 15,
-  color: Colors.text,
-};
-
-const btnStyle = {
-  border: 'none',
-  borderRadius: 6,
-  padding: '8px 18px',
-  fontWeight: 500,
-  cursor: 'pointer',
-  fontSize: 15,
-};
-
-const iconBtn = {
-  ...btnStyle,
-  background: Colors.primaryLight,
-  color: Colors.primary,
-  padding: '6px 10px',
-  marginRight: 6,
-  display: 'inline-flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-};
+const Half = styled.td`
+  flex: 1;
+  `

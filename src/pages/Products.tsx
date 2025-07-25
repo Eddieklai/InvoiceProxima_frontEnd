@@ -1,5 +1,6 @@
 import { Colors } from '@/constants/Colors';
 import { Eye, Edit2, Trash2 } from 'lucide-react';
+import { styled } from 'styled-components';
 import { createProduct, updateProduct, deleteProduct } from '@/services/productServices';
 
 import { Table } from '@/components/ui/Table';
@@ -134,7 +135,7 @@ export default function Products() {
   const handleDelete = async (product: any) => {
     if (window.confirm(`Supprimer le produit ${product.name} ?`)) {
       await deleteProduct(product.id);
-      // Rafraîchis la liste après suppression si besoin
+
     }
   };
 
@@ -153,11 +154,16 @@ export default function Products() {
           };
           await createProduct(data);
         }}>
-          <input name="name" placeholder="Nom" required />
-          <input name="price" type="number" step="0.01" placeholder="Prix" required />
-          <input name="tva" type="number" step="0.01" placeholder="TVA (%)" />
-          <input name="description" placeholder="Description" />
-          <button type="submit">Enregistrer</button>
+          <FromGroup label="Nom" htmlFor="name" error={null}>
+            <Input name="name" placeholder="Nom" required />
+          </FromGroup>
+          <FromGroup label="Prix" htmlFor="price" error={null}>
+            <Input name="price" type="number" step="0.01" placeholder="Prix" required />
+          </FromGroup>
+          <FromGroup label="TVA (%)" htmlFor="tva" error={null}>
+            <Input name="tva" type="number" step="0.01" placeholder="TVA (%)" />
+          </FromGroup>
+          <Button type="submit">Enregistrer</Button>
         </form>
       </div>
     );
@@ -200,3 +206,12 @@ export default function Products() {
   );
 }
 
+const Row = styled.tr`
+  display: flex;
+  gap: 16px;
+  width: 100%;
+  `
+
+const Half = styled.td`
+  flex: 1;
+  `
