@@ -3,7 +3,8 @@ import { TableRowGeneric } from './TableRowGeneric';
 
 const Wrapper = styled.div`
   width: 100%;
-  overflow-x: auto;
+  max-height: 82vh;
+  overflow-y: auto;
 `;
 
 const StyledTable = styled.table`
@@ -14,6 +15,9 @@ const StyledTable = styled.table`
 
 const Thead = styled.thead`
   background: ${({ theme }) => theme.colors.primaryLight};
+  position: sticky;
+  top: 0;
+  z-index: 2;
 `;
 
 const Th = styled.th`
@@ -31,45 +35,45 @@ const Td = styled.td`
   white-space: nowrap;
 `;
 
-export const Table = ({ columns = [], data = [], loading, emptyText = 'Aucune donnée' } : {
+export const Table = ({ columns = [], data = [], loading, emptyText = 'Aucune donnée' }: {
     columns: { label: string }[];
     data: any[];
     loading?: boolean;
     emptyText?: string;
 }) => {
 
-  return (
-    <Wrapper>
-      <StyledTable>
-        <Thead>
-          <tr>
-            {columns.map((col, i) => (
-              <Th key={i}>{col.label}</Th>
-            ))}
-          </tr>
-        </Thead>
-        <tbody>
-          {loading ? (
-            <tr>
-              <Td colSpan={columns.length} style={{ textAlign: 'center', padding: '32px' }}>
-                Chargement...
-              </Td>
-            </tr>
-          ) : data.length === 0 ? (
-            <tr>
-              <Td colSpan={columns.length} style={{ textAlign: 'center', padding: '32px' }}>
-                {emptyText}
-              </Td>
-            </tr>
-          ) : (
-            data.map((row) => (
-              <TableRowGeneric key={row.id} row={row} columns={columns} />
-            ))
-          )}
-        </tbody>
-      </StyledTable>
-    </Wrapper>
-  );
+    return (
+        <Wrapper>
+            <StyledTable>
+                <Thead>
+                    <tr>
+                        {columns.map((col, i) => (
+                            <Th key={i}>{col.label}</Th>
+                        ))}
+                    </tr>
+                </Thead>
+                <tbody>
+                    {loading ? (
+                        <tr>
+                            <Td colSpan={columns.length} style={{ textAlign: 'center', padding: '32px' }}>
+                                Chargement...
+                            </Td>
+                        </tr>
+                    ) : data.length === 0 ? (
+                        <tr>
+                            <Td colSpan={columns.length} style={{ textAlign: 'center', padding: '32px' }}>
+                                {emptyText}
+                            </Td>
+                        </tr>
+                    ) : (
+                        data.map((row) => (
+                            <TableRowGeneric key={row.id} row={row} columns={columns} />
+                        ))
+                    )}
+                </tbody>
+            </StyledTable>
+        </Wrapper>
+    );
 };
 
 export { Td };
