@@ -2,13 +2,74 @@ import { Colors } from '@/constants/Colors';
 import { Eye, Edit2, Trash2 } from 'lucide-react';
 import { createProduct, updateProduct, deleteProduct } from '@/services/productServices';
 
+import { Table } from '@/components/ui/Table';
+import Input from '@/components/ui/Input';
+import FromGroup from '@/components/ui/FormGroup';
+import Button from '@/components/ui/Button';
+import IconButton from '@/components/ui/IconButton';
+
 import { useProducts } from '@/context/ProductsContext';
 import { useModal } from '@/context/ModalContext';
+
+interface Product {
+  id: number;
+  name: string;
+  price: number;
+  tva?: number;
+  description?: string;
+}
+
+interface Column {
+  label: string;
+  accessor?: keyof Product;
+  render?: (product: Product) => React.ReactNode;
+}
 
 export default function Products() {
   const { products, loading } = useProducts();
 
   const { openModal } = useModal();
+
+  const columns: Column[] = [
+    // { label: '#', accessor: 'id' },
+    { label: 'Nom', accessor: 'name' },
+    {
+      label: 'Prix',
+      render: (product: Product) => `${product.price} €`,
+    },
+    {
+      label: 'Tva (%)',
+      render: (product: Product) => product.tva ? `${product.tva} %` : 'Non renseignée'
+    },
+    {
+      label: 'Actions',
+      render: (product: Product) => (
+        <div style={{ display: 'flex', gap: 8 }}>
+          <IconButton onClick={() => handleView(product)}
+            title="Voir"
+            aria-label="Voir"
+            variant="neutral">
+            <Eye size={18} />
+          </IconButton>
+          <IconButton
+            onClick={() => handleEdit(product)}
+            title="Modifier"
+            aria-label="Modifier"
+          >
+            <Edit2 size={18} />
+          </IconButton>
+          <IconButton
+            onClick={() => handleDelete(product)}
+            title="Supprimer"
+            aria-label="Supprimer"
+            variant="danger"
+          >
+            <Trash2 size={18} />
+          </IconButton>
+        </div>
+      ),
+    },
+  ];
 
   const handleView = (product: any) => {
     openModal(
@@ -37,11 +98,34 @@ export default function Products() {
           };
           await updateProduct(product.id, data);
         }}>
-          <input name="name" defaultValue={product.name} placeholder="Nom" required />
-          <input name="price" type="number" step="0.01" defaultValue={product.price} placeholder="Prix" required />
-          <input name="tva" type="number" step="0.01" defaultValue={product.tva} placeholder="TVA (%)" />
-          <input name="description" defaultValue={product.description} placeholder="Description" />
-          <button type="submit" style={btnStyle}>Enregistrer</button>
+          <FromGroup label="Nom" htmlFor="name" error={null}>
+            <Input
+              name="name"
+              defaultValue={product.name}
+              placeholder="Nom"
+              required
+            />
+          </FromGroup>
+          <FromGroup label="Prix" htmlFor="price" error={null}>
+            <Input
+              name="price"
+              type="number"
+              step="0.01"
+              defaultValue={product.price}
+              placeholder="Prix"
+              required
+            />
+          </FromGroup>
+          <FromGroup label="TVA (%)" htmlFor="tva" error={null}>
+            <Input
+              name="tva"
+              type="number"
+              step="0.01"
+              defaultValue={product.tva}
+              placeholder="TVA (%)"
+            />
+          </FromGroup>
+          <Button type="submit">Enregistrer</Button>
         </form>
       </div>
     );
@@ -73,7 +157,7 @@ export default function Products() {
           <input name="price" type="number" step="0.01" placeholder="Prix" required />
           <input name="tva" type="number" step="0.01" placeholder="TVA (%)" />
           <input name="description" placeholder="Description" />
-          <button type="submit" style={btnStyle}>Enregistrer</button>
+          <button type="submit">Enregistrer</button>
         </form>
       </div>
     );
@@ -83,7 +167,7 @@ export default function Products() {
     <>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 32 }}>
         <h1 style={{ fontSize: 32, fontWeight: 700 }}>Produits</h1>
-        <button
+        <Button
           style={{
             background: Colors.primary,
             color: Colors.white,
@@ -97,7 +181,7 @@ export default function Products() {
           onClick={handleCreateProduct}
         >
           Nouveau produit
-        </button>
+        </Button>
       </div>
       <div style={{
         background: Colors.white,
@@ -105,77 +189,14 @@ export default function Products() {
         boxShadow: `0 2px 8px ${Colors.shadow}`,
         padding: 24,
       }}>
-        <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-          <thead>
-            <tr style={{ background: Colors.primaryLight }}>
-              <th style={thStyle}>#</th>
-              <th style={thStyle}>Nom</th>
-              <th style={thStyle}>Prix</th>
-              <th style={thStyle}>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {loading ? (
-              <tr>
-                <td colSpan={4} style={{ textAlign: 'center', padding: 32 }}>Chargement...</td>
-              </tr>
-            ) : products.length === 0 ? (
-              <tr>
-                <td colSpan={4} style={{ textAlign: 'center', padding: 32 }}>Aucun produit</td>
-              </tr>
-            ) : (
-              products.map((product) => (
-                <tr key={product.id} style={{ borderBottom: `1px solid ${Colors.mediumGray}` }}>
-                  <td style={tdStyle}>{product.id}</td>
-                  <td style={tdStyle}>{product.name}</td>
-                  <td style={tdStyle}>{product.price}€</td>
-                  <td style={tdStyle}>
-                    <td style={tdStyle}>
-                      <button style={iconBtn} title="Voir" onClick={() => handleView(product)}><Eye size={18} /></button>
-                      <button style={iconBtn} title="Éditer" onClick={() => handleEdit(product)}><Edit2 size={18} /></button>
-                      <button style={iconBtn} title="Supprimer" onClick={() => handleDelete(product)}><Trash2 size={18} /></button>
-                    </td>
-                  </td>
-                </tr>
-              ))
-            )}
-          </tbody>
-        </table>
+        <Table
+          columns={columns}
+          data={products}
+          loading={loading}
+          emptyText="Aucun produit trouvé"
+        />
       </div>
     </>
   );
 }
 
-const thStyle = {
-  padding: '12px 8px',
-  fontWeight: 700,
-  color: Colors.primary,
-  textAlign: 'left' as const,
-  fontSize: 15,
-};
-
-const tdStyle = {
-  padding: '10px 8px',
-  fontSize: 15,
-  color: Colors.text,
-};
-
-const btnStyle = {
-  border: 'none',
-  borderRadius: 6,
-  padding: '8px 18px',
-  fontWeight: 500,
-  cursor: 'pointer',
-  fontSize: 15,
-};
-
-const iconBtn = {
-  ...btnStyle,
-  background: Colors.primaryLight,
-  color: Colors.primary,
-  padding: '6px 10px',
-  marginRight: 6,
-  display: 'inline-flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-};
