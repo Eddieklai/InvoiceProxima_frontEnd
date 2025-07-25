@@ -6,6 +6,7 @@ import AuthLayout from '@/components/Auth/AuthLayout';
 import Link from '@/components/ui/Link';
 import Button from '@/components/ui/Button';
 import Input from '@/components/ui/Input';
+import FormGroup from '@/components/ui/FormGroup';
 import { useAuth } from '@/context/AuthContext';
 
 export default function Login() {
@@ -49,32 +50,35 @@ export default function Login() {
       heroSubtitle="Une solution moderne et intuitive pour gérer vos factures, clients et produits. Conçue spécialement."
     >
       <Form onSubmit={handleSubmit}>
-        <Input
-          id="email"
-          type="email"
-          label="Adresse email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          iconLeft={<Mail size={20} />}
-          required
-        />
 
-        <Input
-          id="password"
-          type={showPassword ? 'text' : 'password'}
-          label="Mot de passe"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          iconLeft={
-            <PasswordToggle
-              type="button"
-              onClick={() => setShowPassword(!showPassword)}
-            >
-              {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
-            </PasswordToggle>
-          }
-          required
-        />
+        <FormGroup label="Adresse email" htmlFor="email" error={error}>
+          <Input
+            id="email"
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            iconLeft={<Mail size={20} />}
+            required
+          />
+        </FormGroup>
+
+        <FormGroup label="Mot de passe" htmlFor="password" error={error}>
+          <Input
+            id="password"
+            type={showPassword ? 'text' : 'password'}
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            iconLeft={
+              <PasswordToggle
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+              >
+                {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+              </PasswordToggle>
+            }
+            required
+          />
+        </FormGroup>
 
         <Button
           variant="primary"
@@ -104,7 +108,7 @@ export default function Login() {
           <Link to="/register" $variant="primary">Créer un compte</Link>
         </Divider>
       </Form>
-    </AuthLayout>
+    </AuthLayout >
   );
 }
 
