@@ -21,6 +21,7 @@ interface ClientsContextType {
   clients: Client[];
   loading: boolean;
   error: string | null;
+  setRefreshClient: React.Dispatch<React.SetStateAction<boolean>>;
   fetchClients: () => Promise<void>;
   addClient: (name: string, email: string, adress: string, phone: string) => Promise<void>;
   editClient: (id: string, data: Partial<Omit<Client, 'id'>>) => Promise<void>;
@@ -32,6 +33,7 @@ const ClientsContext = createContext<ClientsContextType | undefined>(undefined);
 export const ClientsProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [clients, setClients] = useState<Client[]>([]);
   const [loading, setLoading] = useState(false);
+  const [refreshClient, setRefreshClient] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const fetchClients = async () => {
@@ -44,6 +46,7 @@ export const ClientsProvider: React.FC<{ children: React.ReactNode }> = ({ child
       setError('Erreur lors du chargement des clients');
     } finally {
       setLoading(false);
+      setRefreshClient(false);
     }
   };
 
@@ -94,9 +97,14 @@ export const ClientsProvider: React.FC<{ children: React.ReactNode }> = ({ child
   useEffect(() => {
     fetchClients();
   }, []);
+  
+  useEffect(() => {
+    if (refreshClient)
+      fetchClients();
+  }, [refreshClient]);
 
   return (
-    <ClientsContext.Provider value={{ clients, loading, error, fetchClients, addClient, editClient, removeClient }}>
+    <ClientsContext.Provider value={{ clients, loading, setRefreshClient, error, fetchClients, addClient, editClient, removeClient }}>
       {children}
     </ClientsContext.Provider>
   );

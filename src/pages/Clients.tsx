@@ -15,8 +15,8 @@ import IconButton from '@/components/ui/IconButton';
 import { useModal } from '@/context/ModalContext';
 
 export default function Clients() {
-  const { clients, loading } = useClients();
-  const { openModal } = useModal();
+  const { clients, loading, setRefreshClient } = useClients();
+  const { openModal, closeModal } = useModal();
 
   const columns = [
     // { label: '#', accessor: 'id' },
@@ -60,8 +60,8 @@ export default function Clients() {
           };
           // Pour la création
           await createClient(data);
-          // Pour l'édition
-          // await updateClient(client.id, data);
+          closeModal();
+          setRefreshClient(true);
         }}>
           <FormGroup label="Nom" htmlFor="name">
             <Input name="name" placeholder="Nom" required />
@@ -131,7 +131,8 @@ export default function Clients() {
             phone: formData.get('phone') as string,
           };
           await updateClient(client.id, data);
-
+          closeModal();
+          setRefreshClient(true);
         }}>
           <FormGroup label="Nom" htmlFor="name">
             <Input name="name" defaultValue={client.name} placeholder="Nom" required />
@@ -154,7 +155,8 @@ export default function Clients() {
   const handleDelete = async (client: any) => {
     if (window.confirm(`Supprimer le client ${client.name} ?`)) {
       await deleteClient(client.id);
-      // Rafraîchis la liste après suppression
+      closeModal();
+      setRefreshClient(true);
     }
   };
 
