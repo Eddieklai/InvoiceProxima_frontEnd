@@ -29,12 +29,12 @@ const variants = {
     },
     bounce: {
         initial: { opacity: 0, scale: 0.7 },
-        animate: { opacity: 1, scale: 1, transition: { type: 'spring', stiffness: 500, damping: 20 } },
+        animate: { opacity: 1, scale: 1, transition: { type: "spring" as const, stiffness: 500, damping: 20 } },
         exit: { opacity: 0, scale: 0.7, transition: { duration: 0.3 } }
     },
     elastic: {
         initial: { opacity: 0, y: 80, scale: 0.9 },
-        animate: { opacity: 1, y: 0, scale: 1, transition: { type: 'spring', stiffness: 120, damping: 12 } },
+        animate: { opacity: 1, y: 0, scale: 1, transition: { type: "spring" as const, stiffness: 120, damping: 12 } },
         exit: { opacity: 0, y: -80, scale: 0.9, transition: { duration: 0.3 } }
     }
 };
@@ -61,7 +61,7 @@ export default function PageTransition({
                 height: '100%',
                 width: '100%',
                 overflow: 'hidden',
-                position: 'absolute',   // Ajoute ceci
+                position: 'absolute',
                 top: 0,
                 left: 0,
             }}
