@@ -21,9 +21,22 @@ import { ClientsProvider } from '@/context/ClientsContext';
 import { ProductsProvider } from '@/context/ProductsContext';
 import { ModalProvider } from '@/context/ModalContext';
 import { AuthProvider } from '@/context/AuthContext';
+import { NotificationProvider } from './context/NotificationContext';
 
 import PrivateRoute from './components/Auth/PrivateRoute';
 import PrivateLayout from './components/Layout/PrivateLayout';
+
+const TestNotif = styled.div`
+  position: fixed;
+  top: 32px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: red;
+  color: white;
+  padding: 24px;
+  z-index: 9999;
+  font-size: 20px;
+`;
 
 
 function AppRoutes() {
@@ -32,8 +45,6 @@ function AppRoutes() {
     <PageWrapper>
       <AnimatePresence mode="wait">
         <Routes location={location} key={location.pathname}>
-
-
           <Route path="/" element={
             <PageTransition animation='fade'>
               <Navigate to="/login" replace />
@@ -54,22 +65,24 @@ function AppRoutes() {
 
           <Route element={
             <PrivateRoute>
-              <InvoicesProvider>
-                <ClientsProvider>
-                  <ProductsProvider>
-                    <ModalProvider>
-                      <PrivateLayout />
-                    </ModalProvider>
-                  </ProductsProvider>
-                </ClientsProvider>
-              </InvoicesProvider>
+              <NotificationProvider>
+                <InvoicesProvider>
+                  <ClientsProvider>
+                    <ProductsProvider>
+                      <ModalProvider>
+                        <PrivateLayout />
+                      </ModalProvider>
+                    </ProductsProvider>
+                  </ClientsProvider>
+                </InvoicesProvider>
+              </NotificationProvider>
             </PrivateRoute>
           }>
             {/* <Route path="/dashboard" element={
               <PageTransition animation='zoom'>
-                <Dashboard />
+              <Dashboard />
               </PageTransition>
-            } /> */}
+              } /> */}
             <Route path="/dashboard" element={
               <Dashboard />
             } />
@@ -94,7 +107,6 @@ function AppRoutes() {
 
 export default function App() {
   return (
-
     <Router>
       <AuthProvider>
         <ThemeProvider theme={theme}>
