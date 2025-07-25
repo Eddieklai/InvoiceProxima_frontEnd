@@ -1,6 +1,6 @@
 import { Link as RouterLink } from 'react-router-dom';
 import type { LinkProps as RouterLinkProps } from 'react-router-dom';
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 import React from 'react';
 
 type AppLinkProps = RouterLinkProps & {

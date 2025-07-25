@@ -133,11 +133,19 @@ export default function Clients() {
           await updateClient(client.id, data);
 
         }}>
-          <input name="name" defaultValue={client.name} placeholder="Nom" required />
-          <input name="email" type="email" defaultValue={client.email} placeholder="Email" required />
-          <input name="address" defaultValue={client.address} placeholder="Adresse" required />
-          <input name="phone" defaultValue={client.phone} placeholder="Téléphone" required />
-          <button type="submit">Enregistrer</button>
+          <FormGroup label="Nom" htmlFor="name">
+            <Input name="name" defaultValue={client.name} placeholder="Nom" required />
+          </FormGroup>
+          <FormGroup label="Email" htmlFor="email">
+            <Input name="email" type="email" defaultValue={client.email} placeholder="Email" required />
+          </FormGroup>
+          <FormGroup label="Adresse" htmlFor="address">
+            <Input name="address" defaultValue={client.address} placeholder="Adresse" required />
+          </FormGroup>
+          <FormGroup label="Téléphone" htmlFor="phone">
+            <Input name="phone" defaultValue={client.phone} placeholder="Téléphone" required />
+          </FormGroup>
+          <Button type="submit">Enregistrer</Button>
         </form>
       </div>
     );
