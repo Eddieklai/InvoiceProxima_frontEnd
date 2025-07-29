@@ -16,6 +16,7 @@ interface ProductsContextType {
   products: Product[];
   loading: boolean;
   error: string | null;
+  setRefreshProduct: React.Dispatch<React.SetStateAction<boolean>>;
   fetchProducts: () => Promise<void>;
   addProduct: (name: string, price: number) => Promise<void>;
   editProduct: (id: string, data: Partial<Omit<Product, 'id'>>) => Promise<void>;
@@ -28,6 +29,7 @@ export const ProductsProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [refreshProduct, setRefreshProduct] = useState(false);
 
   const fetchProducts = async () => {
     setLoading(true);
@@ -91,8 +93,13 @@ export const ProductsProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     fetchProducts();
   }, []);
 
+  useEffect(() => {
+    if (refreshProduct)
+      fetchProducts();
+  }, [refreshProduct]);
+
   return (
-    <ProductsContext.Provider value={{ products, loading, error, fetchProducts, addProduct, editProduct, removeProduct }}>
+    <ProductsContext.Provider value={{ products, loading, error, setRefreshProduct, fetchProducts, addProduct, editProduct, removeProduct }}>
       {children}
     </ProductsContext.Provider>
   );

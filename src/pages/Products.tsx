@@ -11,6 +11,7 @@ import IconButton from '@/components/ui/IconButton';
 
 import { useProducts } from '@/context/ProductsContext';
 import { useModal } from '@/context/ModalContext';
+import { useNotification } from '@/context/NotificationContext';
 
 interface Product {
   id: number;
@@ -27,9 +28,9 @@ interface Column {
 }
 
 export default function Products() {
-  const { products, loading } = useProducts();
-
-  const { openModal } = useModal();
+  const { products, loading, setRefreshProduct } = useProducts();
+  const { openModal, closeModal } = useModal();
+  const { notify} = useNotification();
 
   const columns: Column[] = [
     // { label: '#', accessor: 'id' },
@@ -97,7 +98,14 @@ export default function Products() {
             tva: Number(formData.get('tva')),
             description: formData.get('description') as string,
           };
-          await updateProduct(product.id, data);
+          const response = await updateProduct(product.id, data);
+          if (response) {
+            notify.success('Produit mis à jour avec succès');
+          } else {
+            notify.error('Erreur lors de la mise à jour du produit');
+          }
+          closeModal();
+          setRefreshProduct(true);
         }}>
           <FromGroup label="Nom" htmlFor="name" error={null}>
             <Input
@@ -134,8 +142,15 @@ export default function Products() {
 
   const handleDelete = async (product: any) => {
     if (window.confirm(`Supprimer le produit ${product.name} ?`)) {
-      await deleteProduct(product.id);
+      const response = await deleteProduct(product.id);
 
+      if (response === 204) {
+        notify.success('Produit supprimé avec succès');
+      } else {
+        notify.error('Erreur lors de la suppression du produit');
+      }
+      closeModal();
+      setRefreshProduct(true);
     }
   };
 

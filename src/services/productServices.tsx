@@ -50,11 +50,10 @@ export const updateProduct = async (id: string, data: { name?: string; price?: n
 export const deleteProduct = async (id: string) => {
     try {
         const response = await axios.delete(`${API_URL}/product/${id}`);
-        if (response.status !== 200) {
+        if (response.status !== 204) {
             throw new Error('Product deletion failed');
         }
-        console.log('Product deleted successfully:', response.data);
-        return response.data;
+        return response.status;
     } catch (error) {
         console.error('Product deletion failed:', error);
         throw error;
