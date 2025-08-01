@@ -1,6 +1,13 @@
 import { useState } from 'react';
-import { Link, Navigate } from 'react-router-dom';
+import { Form, Link, Navigate } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
+
+import Button from '@/components/ui/Button';
+import FormGroup from '@/components/ui/FormGroup';
+import Input from '@/components/ui/Input';
+
+import { Colors } from '@/constants/Colors';
+
 
 export default function Register() {
   const { isAuthenticated, register, loading, error } = useAuth();
@@ -55,18 +62,76 @@ export default function Register() {
       <div style={styles.card}>
         <h2>Créer un compte</h2>
         <form onSubmit={handleSubmit}>
-          <input type="email" name="email" placeholder="Email" value={form.email} onChange={handleChange} style={styles.input} required />
-          <input type="password" name="password" placeholder="Mot de passe" value={form.password} onChange={handleChange} style={styles.input} required />
-          <input type="text" name="companyName" placeholder="Nom de la société" value={form.companyName} onChange={handleChange} style={styles.input} required />
-          <input type="text" name="postalCode" placeholder="Code postal" value={form.postalCode} onChange={handleChange} style={styles.input} required />
-          <input type="text" name="address" placeholder="Adresse" value={form.address} onChange={handleChange} style={styles.input} required />
-          <input type="text" name="city" placeholder="Ville" value={form.city} onChange={handleChange} style={styles.input} required />
-          <input type="text" name="country" placeholder="Pays" value={form.country} onChange={handleChange} style={styles.input} required />
-          <input type="text" name="siret" placeholder="SIRET" value={form.siret} onChange={handleChange} style={styles.input} required />
-          <input type="tel" name="phone" placeholder="Téléphone" value={form.phone} onChange={handleChange} style={styles.input}/>
-          <button type="submit" disabled={loading} style={styles.button}>
-            {loading ? 'Création...' : 'Créer un compte'}
-          </button>
+          <FormGroup>
+            <Input
+              name="email"
+              type="email"
+              placeholder="Email"
+              value={form.email}
+              onChange={handleChange}
+              required
+            />
+            <Input
+              name="password"
+              type="password"
+              placeholder="Mot de passe"
+              value={form.password}
+              onChange={handleChange}
+              required
+            />
+            <Input
+              name="companyName"
+              placeholder="Nom de la société"
+              value={form.companyName}
+              onChange={handleChange}
+              required
+            />
+            <Input
+              name="postalCode"
+              placeholder="Code postal"
+              value={form.postalCode}
+              onChange={handleChange}
+              required
+            />
+            <Input
+              name="address"
+              placeholder="Adresse"
+              value={form.address}
+              onChange={handleChange}
+              required
+            />
+            <Input
+              name="city"
+              placeholder="Ville"
+              value={form.city}
+              onChange={handleChange}
+              required
+            />
+            <Input
+              name="country"
+              placeholder="Pays"
+              value={form.country}
+              onChange={handleChange}
+              required
+            />
+            <Input
+              name="siret"
+              placeholder="SIRET"
+              value={form.siret}
+              onChange={handleChange}
+              required
+            />
+            <Input
+              name="phone"
+              type="tel"
+              placeholder="Téléphone"
+              value={form.phone}
+              onChange={handleChange}
+            />
+            <Button type="submit" disabled={loading}>
+              {loading ? 'Création...' : 'Créer un compte'}
+            </Button>
+          </FormGroup>
           {(formError || error) && <div style={styles.error}>{formError || error}</div>}
         </form>
         <div style={styles.footer}>
@@ -126,7 +191,7 @@ const styles = {
     fontSize: 15,
   },
   link: {
-    color: '#D9A066',
+    color: Colors.primary,
     fontWeight: 500,
     textDecoration: 'none',
     marginLeft: 4,
