@@ -10,19 +10,21 @@ import { downloadInvoice } from '@/services/invoiceServices';
 import { Table } from '@/components/ui/Table';
 import IconButton from '@/components/ui/IconButton';
 
+import type { Invoice } from '@/services/invoiceServices';
+
 const Factures: React.FC = () => {
     const navigate = useNavigate();
     const { openModal, closeModal } = useModal();
     const { invoices, loading, editInvoice, removeInvoice, error } = useInvoices();
 
     const columns = [
-        { label: 'Client', render: (invoice) => invoice.client?.name || invoice.clientId },
+        { label: 'Client', render: (invoice: Invoice) => invoice.client?.name || invoice.clientId },
         { label: 'Titre', accessor: 'title' },
-        { label: 'Montant', render: (invoice) => `${invoice.total_ttc.toFixed(2)} €` },
-        { label: 'Statut', render: (invoice) =>  <td style={{ ...tdStyle, ...statusColor(invoice.status) }}>{statusFromEng(invoice.status)}</td> },
+        { label: 'Montant', render: (invoice: Invoice) => `${invoice.total_ttc.toFixed(2)} €` },
+        { label: 'Statut', render: (invoice: Invoice) =>  <td style={{ ...tdStyle, ...statusColor(invoice.status) }}>{statusFromEng(invoice.status)}</td> },
         {
             label: 'Actions',
-            render: (invoice) => (
+            render: (invoice: Invoice) => (
                 <div style={{ display: 'flex', gap: 8 }}>
                     <IconButton onClick={() => handleView(invoice)} title="Voir"><Eye size={18} /></IconButton>
                     <IconButton onClick={() => handleEdit(invoice)} title="Modifier"><Edit2 size={18} /></IconButton>

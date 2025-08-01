@@ -2,6 +2,21 @@ import axios from 'axios';
 
 const API_URL = import.meta.env.VITE_API_URL;
 
+export type Invoice = 
+{
+    id: string;
+    title: string;
+    clientId: string;
+    total_ttc: number;
+    total_ht: number;
+    createdAt: string;
+    updatedAt: string;
+    client: {
+        id: string;
+        name: string;
+    };
+};
+
 const formatDate = (date: string) => {
     const d = new Date(date);
     return `${d.getDate().toString().padStart(2, '0')}/${(d.getMonth() + 1).toString().padStart(2, '0')}/${d.getFullYear()}`;
