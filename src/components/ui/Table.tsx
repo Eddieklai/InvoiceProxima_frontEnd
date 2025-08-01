@@ -11,6 +11,8 @@ const StyledTable = styled.table`
   width: 100%;
   border-collapse: collapse;
   min-width: 600px;
+  overflow: hidden;
+  border-radius: 16px; // arrondi global
 `;
 
 const Thead = styled.thead`
@@ -18,14 +20,18 @@ const Thead = styled.thead`
   position: sticky;
   top: 0;
   z-index: 2;
+
+  box-shadow: 0 2px 8px ${({ theme }) => theme.colors.shadow}; // ombre douce
 `;
 
 const Th = styled.th`
-  padding: 12px;
+  padding: 16px 12px;
+  color: ${({ theme }) => theme.colors.white};
   text-align: left;
-  font-weight: 600;
-  font-size: 14px;
+  font-weight: 700;
+  font-size: 15px;
   white-space: nowrap;
+
 `;
 
 const Td = styled.td`

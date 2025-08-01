@@ -47,7 +47,7 @@ export default function PrivateLayout() {
         onClick={handleSidebarToggle}
         style={{
           position: 'fixed',
-          top: 24,
+          top: 12,
           left: sidebarOpen ? 190 : 24,
           zIndex: 3000,
           background: Colors.primary,
@@ -73,7 +73,7 @@ export default function PrivateLayout() {
           transition: 'left 0.35s cubic-bezier(0.4,0,0.2,1), box-shadow 0.2s',
         }}
       >
-        <div>
+        <div style={{ padding: '20px 6px' }}>
           {menuGroups.map((group, idx) => (
             <div key={group.title} style={styles.groupWrapper}>
               <button
@@ -107,9 +107,11 @@ export default function PrivateLayout() {
                       to={item.path}
                       style={{
                         ...styles.menuLink,
-                        color: isActive ? Colors.primary : Colors.text,
+                        color: isActive ? Colors.lightGray : Colors.text,
                         background: isActive ? Colors.primaryLight : 'transparent',
                         cursor: 'pointer',
+                        fontWeight: isActive ? 600 : 500,
+                        boxShadow: isActive ? `0 2px 8px ${Colors.shadow}` : 'none',
                       }}
                     >
                       <Icon size={20} />

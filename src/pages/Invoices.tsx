@@ -6,12 +6,32 @@ import { Eye, Edit2, Trash2, Plus, Download } from 'lucide-react';
 
 import { useNavigate } from 'react-router-dom';
 
-import {downloadInvoice} from '@/services/invoiceServices';
+import { downloadInvoice } from '@/services/invoiceServices';
+import { Table } from '@/components/ui/Table';
+import IconButton from '@/components/ui/IconButton';
 
 const Factures: React.FC = () => {
     const navigate = useNavigate();
     const { openModal, closeModal } = useModal();
     const { invoices, loading, editInvoice, removeInvoice, error } = useInvoices();
+
+    const columns = [
+        { label: 'Client', render: (invoice) => invoice.client?.name || invoice.clientId },
+        { label: 'Titre', accessor: 'title' },
+        { label: 'Montant', render: (invoice) => `${invoice.total_ttc.toFixed(2)} €` },
+        { label: 'Statut', render: (invoice) =>  <td style={{ ...tdStyle, ...statusColor(invoice.status) }}>{statusFromEng(invoice.status)}</td> },
+        {
+            label: 'Actions',
+            render: (invoice) => (
+                <div style={{ display: 'flex', gap: 8 }}>
+                    <IconButton onClick={() => handleView(invoice)} title="Voir"><Eye size={18} /></IconButton>
+                    <IconButton onClick={() => handleEdit(invoice)} title="Modifier"><Edit2 size={18} /></IconButton>
+                    <IconButton onClick={() => handleDownload(invoice)} title="Télécharger"><Download size={18} /></IconButton>
+                    <IconButton onClick={() => handleDelete(invoice)} title="Supprimer" variant="danger"><Trash2 size={18} /></IconButton>
+                </div>
+            ),
+        },
+    ];
 
 
     function InvoiceForm({ onSubmit, initial }: { onSubmit: (data: any) => void, initial?: any }) {
@@ -194,43 +214,12 @@ const Factures: React.FC = () => {
                 overflowX: 'auto'
             }}>
                 {error && <div style={{ color: Colors.error, marginBottom: 16 }}>{error}</div>}
-                <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: 700 }}>
-                    <thead>
-                        <tr style={{ background: Colors.primaryLight }}>
-                            <th style={thStyle}>Client</th>
-                            <th style={thStyle}>Titre</th>
-                            <th style={thStyle}>Montant</th>
-                            <th style={thStyle}>Statut</th>
-                            <th style={thStyle}>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {loading ? (
-                            <tr>
-                                <td colSpan={5} style={{ textAlign: 'center', padding: 32 }}>Chargement...</td>
-                            </tr>
-                        ) : invoices.length === 0 ? (
-                            <tr>
-                                <td colSpan={5} style={{ textAlign: 'center', padding: 32 }}>Aucune facture</td>
-                            </tr>
-                        ) : (
-                            invoices.map((inv) => (
-                                <tr key={inv.id} style={{ borderBottom: `1px solid ${Colors.mediumGray}`, transition: 'background 0.2s' }}>
-                                    <td style={tdStyle}>{inv.client?.name || inv.clientId}</td>
-                                    <td style={tdStyle}>{inv.title}</td>
-                                    <td style={tdStyle}>{inv.total_ttc.toFixed(2)}€</td>
-                                    <td style={{ ...tdStyle, ...statusColor(inv.status) }}>{statusFromEng(inv.status)}</td>
-                                    <td style={tdStyle}>
-                                        <button style={iconBtn} title="Voir" onClick={() => handleView(inv)}><Eye size={18} /></button>
-                                        <button style={iconBtn} title="Éditer" onClick={() => handleEdit(inv)}><Edit2 size={18} /></button>
-                                        <button style={iconBtn} title="Télécharger" onClick={() => handleDownload(inv)}><Download size={18}/></button>
-                                        <button style={iconBtn} title="Supprimer" onClick={() => handleDelete(inv)}><Trash2 size={18} /></button>
-                                    </td>
-                                </tr>
-                            ))
-                        )}
-                    </tbody>
-                </table>
+                <Table
+                    columns={columns}
+                    data={invoices}
+                    loading={loading}
+                    emptyText="Aucune facture"
+                />
             </div>
         </>
     );
