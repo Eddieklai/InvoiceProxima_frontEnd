@@ -11,6 +11,7 @@ export type Invoice =
     total_ht: number;
     createdAt: string;
     updatedAt: string;
+    status: string;
     client: {
         id: string;
         name: string;

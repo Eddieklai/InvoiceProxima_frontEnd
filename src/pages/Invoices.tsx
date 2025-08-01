@@ -227,13 +227,6 @@ const Factures: React.FC = () => {
     );
 };
 
-const thStyle = {
-    padding: '12px 8px',
-    fontWeight: 700,
-    color: Colors.primary,
-    textAlign: 'left' as const,
-    fontSize: 15,
-};
 
 const tdStyle = {
     padding: '10px 8px',
@@ -248,17 +241,6 @@ const btnStyle = {
     fontWeight: 500,
     cursor: 'pointer',
     fontSize: 15,
-};
-
-const iconBtn = {
-    ...btnStyle,
-    background: Colors.primaryLight,
-    color: Colors.primary,
-    padding: '6px 10px',
-    marginRight: 6,
-    display: 'inline-flex',
-    alignItems: 'center',
-    justifyContent: 'center',
 };
 
 const labelStyle = {
