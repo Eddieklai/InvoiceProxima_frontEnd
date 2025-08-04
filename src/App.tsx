@@ -26,82 +26,81 @@ import { NotificationProvider } from './context/NotificationContext';
 import PrivateRoute from './components/Auth/PrivateRoute';
 import PrivateLayout from './components/Layout/PrivateLayout';
 
-const TestNotif = styled.div`
-  position: fixed;
-  top: 32px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: red;
-  color: white;
-  padding: 24px;
-  z-index: 9999;
-  font-size: 20px;
-`;
-
-
 function AppRoutes() {
   const location = useLocation();
   return (
-    <PageWrapper>
-      <AnimatePresence mode="wait">
-        <Routes location={location} key={location.pathname}>
-          <Route path="/" element={
-            <PageTransition animation='fade'>
-              <Navigate to="/login" replace />
-            </PageTransition>
-          } />
+    // <PageWrapper>
+    <AnimatePresence mode="wait">
+      <Routes location={location} key={location.pathname}>
+        <Route path="/" element={
+          <PageTransition animation='fade'>
+            <Navigate to="/login" replace />
+          </PageTransition>
+        } />
 
-          <Route path="/login" element={
-            <PageTransition animation='fade'>
-              <Login />
-            </PageTransition>
-          } />
+        <Route path="/login" element={
+          <PageTransition animation='fade'>
+            <Login />
+          </PageTransition>
+        } />
 
-          <Route path="/register" element={
-            <PageTransition animation='elastic'>
-              <Register />
-            </PageTransition>
-          } />
+        <Route path="/register" element={
+          <PageTransition animation='elastic'>
+            <Register />
+          </PageTransition>
+        } />
 
-          <Route element={
-            <PrivateRoute>
-              <NotificationProvider>
-                <InvoicesProvider>
-                  <ClientsProvider>
-                    <ProductsProvider>
-                      <ModalProvider>
-                        <PrivateLayout />
-                      </ModalProvider>
-                    </ProductsProvider>
-                  </ClientsProvider>
-                </InvoicesProvider>
-              </NotificationProvider>
-            </PrivateRoute>
-          }>
-            {/* <Route path="/dashboard" element={
-              <PageTransition animation='zoom'>
+        <Route element={
+          <PrivateRoute>
+            <NotificationProvider>
+              <InvoicesProvider>
+                <ClientsProvider>
+                  <ProductsProvider>
+                    <ModalProvider>
+                      <PrivateLayout />
+                    </ModalProvider>
+                  </ProductsProvider>
+                </ClientsProvider>
+              </InvoicesProvider>
+            </NotificationProvider>
+          </PrivateRoute>
+        }>
+          <Route path="/dashboard" element={
+            <PageTransition animation='slide_x'>
               <Dashboard />
-              </PageTransition>
-              } /> */}
-            <Route path="/dashboard" element={
-              <Dashboard />
-            } />
-            <Route path="/invoices" element={<Invoices />} />
-            <Route path="/products" element={<Products />} />
-            <Route path="/clients" element={<Clients />} />
-            <Route path="/settings" element={<Settings />} />
+            </PageTransition>
+          } />
+          <Route path="/invoices" element={
+            <PageTransition animation='slide_y'>
 
-            <Route path="/invoiceEditor" element={<InvoiceEditor />} />
+              <Invoices />
+            </PageTransition>
+          } />
+          <Route path="/products" element={
+            <PageTransition animation='zoom'>
+            <Products />
+            </PageTransition>
+          } />
+          <Route path="/clients" element={
+            <Clients />
+          } />
+          <Route path="/settings" element={
+            <Settings />
+          } />
 
-            <Route path="/notfound" element={<NotFound />} />
-            <Route path="/notfound/quote" element={<NotFound />} />
-            <Route path="/notfound/payment" element={<NotFound />} />
-          </Route>
+          <Route path="/invoiceEditor" element={
+            <InvoiceEditor />
+          } />
 
-          <Route path="*" element={<Navigate to="/login" replace />} />
-        </Routes>
-      </AnimatePresence>
-    </PageWrapper>
+          <Route path="/notfound" element={<NotFound />} />
+          <Route path="/notfound/quote" element={<NotFound />} />
+          <Route path="/notfound/payment" element={<NotFound />} />
+        </Route>
+
+        <Route path="*" element={<Navigate to="/login" replace />} />
+      </Routes>
+    </AnimatePresence>
+    // </PageWrapper>
   );
 }
 
@@ -110,18 +109,16 @@ export default function App() {
     <Router>
       <AuthProvider>
         <ThemeProvider theme={theme}>
-          <AnimatePresence mode="wait">
-            <AppRoutes />
-          </AnimatePresence >
+          <AppRoutes />
         </ThemeProvider>
       </AuthProvider>
     </Router>
   );
 }
 
-const PageWrapper = styled.div`
-      position: relative;
-      width: 100vw;
-      height: 100vh;
-      overflow: hidden;
-      `;
+// const PageWrapper = styled.div`
+//       position: relative;
+//       width: 100vw;
+//       height: 100vh;
+//       overflow: hidden;
+//       `;
