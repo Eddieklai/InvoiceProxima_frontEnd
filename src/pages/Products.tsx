@@ -216,6 +216,12 @@ export default function Products() {
           loading={loading}
           emptyText="Aucun produit trouvé"
         />
+        <Table
+          columns={columns}
+          data={products}
+          loading={loading}
+          emptyText="Aucun produit trouvé"
+        />
       </div>
     </>
   );
