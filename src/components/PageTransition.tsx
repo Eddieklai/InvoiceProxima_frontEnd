@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion';
 import React from 'react';
+import { useEffect } from 'react';
 
 const variants = {
     fade: {
@@ -50,6 +51,14 @@ export default function PageTransition({
     animation = 'fade',
     duration = 0.7
 }: PageTransitionProps) {
+
+    const handleAnimationStart = () => {
+        document.body.style.overflow = 'hidden';
+    };
+    const handleAnimationComplete = () => {
+        document.body.style.overflow = 'auto';
+    };
+
     return (
         <motion.div
             initial="initial"
@@ -61,10 +70,10 @@ export default function PageTransition({
                 height: '100%',
                 width: '100%',
                 overflow: 'hidden',
-                position: 'absolute',
-                top: 0,
-                left: 0,
+                position: 'relative'
             }}
+            onAnimationStart={handleAnimationStart}
+            onAnimationComplete={handleAnimationComplete}
         >
             {children}
         </motion.div>

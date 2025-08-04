@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link, useLocation, Outlet } from 'react-router-dom';
 import { FileText, Package, Users, Settings, BarChart3, PlusCircle, DollarSign, FilePlus, ChevronDown, Menu, X } from 'lucide-react';
 import { Colors } from '@/constants/Colors';
+import styled from 'styled-components';
 
 const menuGroups = [
   {
@@ -33,193 +34,165 @@ export default function PrivateLayout() {
   const [openGroups, setOpenGroups] = useState(() => menuGroups.map(() => true));
   const [sidebarOpen, setSidebarOpen] = useState(true);
 
-
   const toggleGroup = (idx: number) => {
     setOpenGroups(groups => groups.map((open, i) => i === idx ? !open : open));
   };
 
   const handleSidebarToggle = () => setSidebarOpen(open => !open);
 
-
   return (
-    <div style={styles.container}>
-      <button
+    <Container>
+      <SidebarToggleBtn
         onClick={handleSidebarToggle}
-        style={{
-          position: 'fixed',
-          top: 12,
-          left: sidebarOpen ? 190 : 24,
-          zIndex: 3000,
-          background: Colors.primary,
-          color: Colors.white,
-          border: 'none',
-          borderRadius: 8,
-          padding: 8,
-          boxShadow: `0 2px 8px ${Colors.shadow}`,
-          transition: 'left 0.3s',
-          cursor: 'pointer',
-        }}
+        sidebarOpen={sidebarOpen}
         aria-label={sidebarOpen ? 'Fermer le menu' : 'Ouvrir le menu'}
       >
         {sidebarOpen ? <X size={24} /> : <Menu size={24} />}
-      </button>
-
-      {/* Sidebar animée */}
-      <aside
-        style={{
-          ...styles.aside,
-          left: sidebarOpen ? 0 : -260,
-          boxShadow: sidebarOpen ? `2px 0 8px ${Colors.shadow}` : 'none',
-          transition: 'left 0.35s cubic-bezier(0.4,0,0.2,1), box-shadow 0.2s',
-        }}
-      >
-        <div style={{ padding: '20px 6px' }}>
+      </SidebarToggleBtn>
+      <Aside sidebarOpen={sidebarOpen}>
+        <SidebarContent>
           {menuGroups.map((group, idx) => (
-            <div key={group.title} style={styles.groupWrapper}>
-              <button
-                onClick={() => toggleGroup(idx)}
-                style={{
-                  ...styles.groupButton,
-                  cursor: 'pointer',
-                  color: Colors.mediumGray,
-                }}
-              >
+            <GroupWrapper key={group.title}>
+              <GroupButton onClick={() => toggleGroup(idx)}>
                 <span>{group.title}</span>
-                <span style={{
-                  ...styles.chevron,
-                  transform: openGroups[idx] ? 'rotate(180deg)' : 'rotate(0deg)',
-                }}>
+                <ChevronIcon open={openGroups[idx]}>
                   <ChevronDown size={18} />
-                </span>
-              </button>
-              <div
-                style={{
-                  ...styles.groupContent,
-                  maxHeight: openGroups[idx] ? 500 : 0,
-                }}
-              >
+                </ChevronIcon>
+              </GroupButton>
+              <GroupContent open={openGroups[idx]}>
                 {group.items.map(item => {
                   const Icon = item.icon;
                   const isActive = location.pathname.startsWith(item.path.replace('/new', ''));
                   return (
-                    <Link
+                    <MenuLink
                       key={item.path}
                       to={item.path}
-                      style={{
-                        ...styles.menuLink,
-                        color: isActive ? Colors.lightGray : Colors.text,
-                        background: isActive ? Colors.primaryLight : 'transparent',
-                        cursor: 'pointer',
-                        fontWeight: isActive ? 600 : 500,
-                        boxShadow: isActive ? `0 2px 8px ${Colors.shadow}` : 'none',
-                      }}
+                      active={isActive}
                     >
                       <Icon size={20} />
                       {item.label}
-                    </Link>
+                    </MenuLink>
                   );
                 })}
-              </div>
-            </div>
+              </GroupContent>
+            </GroupWrapper>
           ))}
-        </div>
-        <div style={styles.settingsWrapper}>
-          <Link
-            to="/settings"
-            style={{
-              ...styles.menuLink,
-              color: Colors.text,
-              background: 'transparent',
-              padding: '10px 0',
-              cursor: 'pointer',
-            }}
-          >
+        </SidebarContent>
+        <SettingsWrapper>
+          <MenuLink to="/settings">
             <Settings size={20} />
             Paramètres
-          </Link>
-        </div>
-      </aside>
-      <main
-        style={{
-          ...styles.main,
-          marginLeft: sidebarOpen ? 240 : 0,
-          transition: 'margin-left 0.35s cubic-bezier(0.4,0,0.2,1)',
-        }}
-      >
+          </MenuLink>
+        </SettingsWrapper>
+      </Aside>
+      <Main sidebarOpen={sidebarOpen}>
         <Outlet />
-      </main>
-    </div>
+      </Main>
+    </Container>
   );
-};
+}
+const Container = styled.div`
+  display: flex;
+  min-height: 100vh;
+  background: ${Colors.background};
+`;
 
-const styles = {
-  container: {
-    display: 'flex',
-    minHeight: '100vh',
-    background: Colors.background,
-  },
-  aside: {
-    width: 240,
-    background: Colors.white,
-    boxShadow: `2px 0 8px ${Colors.shadow}`,
-    padding: '32px 0 16px 0',
-    display: 'flex',
-    flexDirection: 'column' as const,
-    justifyContent: 'space-between',
-    position: 'fixed' as const,
-    top: 0,
-    left: 0,
-    height: '100vh',
-    zIndex: 2000,
-    transition: 'left 0.35s cubic-bezier(0.4,0,0.2,1), box-shadow 0.2s',
-  },
-  main: {
-    flex: 1,
-    padding: 40,
-    marginLeft: 240,
-    transition: 'margin-left 0.35s cubic-bezier(0.4,0,0.2,1)',
-  },
-  groupWrapper: {
-    marginBottom: 24,
-  },
-  groupButton: {
-    background: 'none',
-    border: 'none',
-    display: 'flex',
-    alignItems: 'center',
-    gap: 8,
-    fontWeight: 700,
-    fontSize: 13,
-    textTransform: 'uppercase' as const,
-    letterSpacing: 1,
-    margin: '0 0 8px 24px',
-    outline: 'none',
-    width: 'calc(100% - 24px)',
-    padding: 0,
-    transition: 'color 0.2s',
-  },
-  chevron: {
-    transition: 'transform 0.3s',
-    display: 'inline-flex',
-  },
-  groupContent: {
-    overflow: 'hidden',
-    transition: 'max-height 0.35s cubic-bezier(0.4,0,0.2,1)',
-  },
-  menuLink: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: 12,
-    padding: '10px 24px',
-    borderRadius: 8,
-    textDecoration: 'none',
-    fontWeight: 500,
-    transition: 'background 0.2s',
-    marginBottom: 2,
-  },
-  settingsWrapper: {
-    borderTop: `1px solid ${Colors.mediumGray}`,
-    paddingTop: 16,
-    margin: '0 24px',
-  },
-};
+const SidebarToggleBtn = styled.button<{ sidebarOpen: boolean }>`
+  position: fixed;
+  top: 12px;
+  left: ${({ sidebarOpen }) => (sidebarOpen ? '190px' : '24px')};
+  z-index: 3000;
+  background: ${Colors.primary};
+  color: ${Colors.white};
+  border: none;
+  border-radius: 8px;
+  padding: 8px;
+  box-shadow: 0 2px 8px ${Colors.shadow};
+  transition: left 0.3s;
+  cursor: pointer;
+`;
+
+const Aside = styled.aside<{ sidebarOpen: boolean }>`
+  width: 240px;
+  background: ${Colors.white};
+  box-shadow: 2px 0 8px ${Colors.shadow};
+  padding: 32px 0 16px 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: fixed;
+  top: 0;
+  left: ${({ sidebarOpen }) => (sidebarOpen ? '0' : '-260px')};
+  height: 100vh;
+  z-index: 2000;
+  transition: left 0.35s cubic-bezier(0.4,0,0.2,1), box-shadow 0.2s;
+`;
+
+const SidebarContent = styled.div`
+  padding: 20px 6px;
+`;
+
+const GroupWrapper = styled.div`
+  margin-bottom: 24px;
+`;
+
+const GroupButton = styled.button`
+  background: none;
+  border: none;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 700;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin: 0 0 8px 24px;
+  outline: none;
+  width: calc(100% - 24px);
+  padding: 0;
+  transition: color 0.2s;
+  cursor: pointer;
+  color: ${Colors.mediumGray};
+`;
+
+const ChevronIcon = styled.span<{ open: boolean }>`
+  transition: transform 0.3s;
+  display: inline-flex;
+  transform: ${({ open }) => (open ? 'rotate(180deg)' : 'rotate(0deg)')};
+`;
+
+const GroupContent = styled.div<{ open: boolean }>`
+  overflow: hidden;
+  transition: max-height 0.35s cubic-bezier(0.4,0,0.2,1);
+  max-height: ${({ open }) => (open ? '500px' : '0')};
+`;
+
+const MenuLink = styled(Link)<{ active?: boolean }>`
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 24px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 500;
+  transition: background 0.2s;
+  margin-bottom: 2px;
+  color: ${({ active }) => (active ? Colors.lightGray : Colors.text)};
+  background: ${({ active }) => (active ? Colors.primaryLight : 'transparent')};
+  box-shadow: ${({ active }) => (active ? `0 2px 8px ${Colors.shadow}` : 'none')};
+  cursor: pointer;
+  font-weight: ${({ active }) => (active ? 600 : 500)};
+`;
+
+const SettingsWrapper = styled.div`
+  border-top: 1px solid ${Colors.mediumGray};
+  padding-top: 16px;
+  margin: 0 24px;
+`;
+
+const Main = styled.main<{ sidebarOpen: boolean }>`
+  flex: 1;
+  padding: 40px;
+  margin-left: ${({ sidebarOpen }) => (sidebarOpen ? '240px' : '0')};
+  transition: margin-left 0.35s cubic-bezier(0.4,0,0.2,1);
+`;
