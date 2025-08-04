@@ -1,4 +1,6 @@
 import React, { useEffect } from 'react';
+import styled from 'styled-components';
+import { Link } from 'react-router-dom';
 import {
   FileText,
   Package,
@@ -11,6 +13,8 @@ import {
 import Layout from '@/components/Layout/Layout';
 import { Colors } from '@/constants/Colors';
 import { useNavigate } from 'react-router-dom';
+
+import Card from '@/components/ui/Card';
 
 import { useInvoices } from '@/context/InvoicesContext';
 import { useClients } from '@/context/ClientsContext';
@@ -70,200 +74,175 @@ const Dashboard: React.FC = () => {
 
   return (
     <Layout>
-      <div style={styles.dashboardContainer}>
-        <div style={styles.container}>
-          <section style={styles.welcomeSection}>
-            <div style={styles.welcomeCard}>
-              <div style={styles.welcomeContent}>
-                <h1 style={styles.welcomeTitle}>Bienvenue dans InvoiceProxima</h1>
-                <p style={styles.welcomeSubtitle}>
+      <DashboardContainer>
+        <Container>
+          <WelcomeSection>
+            <WelcomeCard>
+              <WelcomeContent>
+                <WelcomeTitle>Bienvenue dans InvoiceProxima</WelcomeTitle>
+                <WelcomeSubtitle>
                   Gérez votre entreprise avec simplicité et efficacité.
                   Accédez à tous vos outils depuis ce tableau de bord.
-                </p>
-              </div>
-            </div>
+                </WelcomeSubtitle>
+              </WelcomeContent>
+            </WelcomeCard>
 
-            <div style={styles.quickStats}>
-              <div style={styles.statCard}>
-                <div style={styles.statValue}>
+            <QuickStats>
+              <StatCard>
+                <StatValue>
                   <TrendingUp size={24} />
                   {numberOfInvoices}
-                </div>
-                <div style={styles.statLabel}>Factures ce mois</div>
-              </div>
-              <div style={styles.statCard}>
-                <div style={styles.statValue}>
+                </StatValue>
+                <StatLabel>Factures ce mois</StatLabel>
+              </StatCard>
+              <StatCard>
+                <StatValue>
                   <Euro size={24} />
                   {totalIncome}€
-                </div>
-                <div style={styles.statLabel}>Chiffre d'affaires</div>
-              </div>
-              <div style={styles.statCard}>
-                <div style={styles.statValue}>
+                </StatValue>
+                <StatLabel>Chiffre d'affaires</StatLabel>
+              </StatCard>
+              <StatCard>
+                <StatValue>
                   <Users size={24} />
                   {clients.length}
-                </div>
-                <div style={styles.statLabel}>Clients actifs</div>
-              </div>
-            </div>
-          </section>
+                </StatValue>
+                <StatLabel>Clients actifs</StatLabel>
+              </StatCard>
+            </QuickStats>
+          </WelcomeSection>
 
-          {/* <section>
-            <button style={{
-              background: Colors.primary,
-              color: Colors.white,
-              padding: '12px 24px',
-              borderRadius: '8px',
-              border: 'none',
-              cursor: 'pointer',
-              marginBottom: '24px'
-            }}>
-              Bouton test api
-            </button>
-          </section> */}
-          <div style={styles.toolsGrid}>
+          <ToolsGrid>
             {tools.map((tool) => {
-              const IconComponent = tool.icon;
               return (
-                <div
-                  key={tool.id}
-                  onClick={() => handleToolClick(tool.id)}
-                  style={styles.toolCard}
-                >
-                  <div style={styles.toolHeader}>
-                    <div style={styles.toolIcon}>
-                      <IconComponent size={24} />
-                    </div>
-                    <ArrowRight style={styles.toolArrow} />
-                  </div>
-                  <h3 style={styles.toolTitle}>{tool.title}</h3>
-                  <p style={styles.toolDescription}>{tool.description}</p>
-                </div>
+                  <Card
+                    icon={<ToolIcon><tool.icon size={24} /></ToolIcon>}
+                    arrow={<ArrowRight />}
+                    accent={tool.color}
+                    clickable
+                    onClick={() => handleToolClick(tool.id)}
+                  >
+                    <ToolTitle>{tool.title}</ToolTitle>
+                    <ToolDescription>{tool.description}</ToolDescription>
+                  </Card>
               );
             })}
-          </div>
-        </div>
-      </div>
+          </ToolsGrid>
+        </Container>
+      </DashboardContainer>
     </Layout>
   );
 };
 
 export default Dashboard;
 
-const styles = {
-  dashboardContainer: {
-    padding: '40px 0',
-    minHeight: 'calc(100vh - 80px)',
-  },
-  container: {
-    maxWidth: '1200px',
-    margin: '0 auto',
-    padding: '0 20px',
-  },
-  welcomeSection: {
-    marginBottom: '48px',
-  },
-  welcomeCard: {
-    background: `linear-gradient(135deg, ${Colors.primary} 0%, ${Colors.primaryHover} 100%)`,
-    color: Colors.white,
-    marginBottom: '32px',
-    position: 'relative' as const,
-    overflow: 'hidden',
-    borderRadius: '12px',
-    padding: '24px',
-    boxShadow: `0 2px 8px ${Colors.shadow}`,
-  },
-  welcomeContent: {
-    position: 'relative' as const,
-    zIndex: 1,
-  },
-  welcomeTitle: {
-    fontSize: '32px',
-    fontWeight: 700,
-    marginBottom: '12px',
-    color: Colors.white,
-  },
-  welcomeSubtitle: {
-    fontSize: '18px',
-    opacity: 0.9,
-    lineHeight: 1.6,
-  },
-  quickStats: {
-    display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
-    gap: '24px',
-    marginBottom: '48px',
-  },
-  statCard: {
-    background: Colors.white,
-    borderRadius: '12px',
-    padding: '24px',
-    boxShadow: `0 2px 8px ${Colors.shadow}`,
-    textAlign: 'center' as const,
-    borderLeft: `4px solid ${Colors.accent}`,
-    transition: 'all 0.3s ease',
-  },
-  statValue: {
-    fontSize: '28px',
-    fontWeight: 700,
-    color: Colors.primary,
-    marginBottom: '8px',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: '8px',
-  },
-  statLabel: {
-    fontSize: '14px',
-    color: Colors.darkGray,
-    fontWeight: 500,
-  },
-  toolsGrid: {
-    display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
-    gap: '24px',
-    marginBottom: '48px',
-  },
-  toolCard: {
-    background: Colors.white,
-    borderRadius: '12px',
-    padding: '24px',
-    boxShadow: `0 2px 8px ${Colors.shadow}`,
-    cursor: 'pointer',
-    transition: 'all 0.3s ease',
-    border: `1px solid ${Colors.mediumGray}`,
-  },
-  toolHeader: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    marginBottom: '16px',
-  },
-  toolIcon: {
-    width: '48px',
-    height: '48px',
-    background: Colors.secondary,
-    borderRadius: '12px',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    color: Colors.primary,
-  },
-  toolArrow: {
-    width: '20px',
-    height: '20px',
-    color: Colors.darkGray,
-    transition: 'all 0.3s ease',
-  },
-  toolTitle: {
-    fontSize: '20px',
-    fontWeight: 600,
-    color: Colors.text,
-    marginBottom: '8px',
-  },
-  toolDescription: {
-    color: Colors.darkGray,
-    lineHeight: 1.5,
-    fontSize: '14px',
-  },
-};
+const DashboardContainer = styled.div`
+  padding: 40px 0;
+  min-height: calc(100vh - 80px);
+  position: relative;
+  width: 100%;
+`;
+
+const Container = styled.div`
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+`;
+
+const WelcomeSection = styled.section`
+  margin-bottom: 48px;
+`;
+
+const WelcomeCard = styled.div`
+  background: linear-gradient(135deg, ${Colors.primary} 0%, ${Colors.primaryHover} 100%);
+  color: ${Colors.white};
+  margin-bottom: 32px;
+  position: relative;
+  overflow: hidden;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 2px 8px ${Colors.shadow};
+`;
+
+const WelcomeContent = styled.div`
+  position: relative;
+  z-index: 1;
+`;
+
+const WelcomeTitle = styled.h1`
+  font-size: 32px;
+  font-weight: 700;
+  margin-bottom: 12px;
+  color: ${Colors.white};
+`;
+
+const WelcomeSubtitle = styled.p`
+  font-size: 18px;
+  opacity: 0.9;
+  line-height: 1.6;
+`;
+
+const QuickStats = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 24px;
+  margin-bottom: 48px;
+`;
+
+const StatCard = styled.div`
+  background: ${Colors.white};
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 2px 8px ${Colors.shadow};
+  text-align: center;
+  border-left: 4px solid ${Colors.accent};
+  transition: all 0.3s ease;
+`;
+
+const StatValue = styled.div`
+  font-size: 28px;
+  font-weight: 700;
+  color: ${Colors.primary};
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+`;
+
+const StatLabel = styled.div`
+  font-size: 14px;
+  color: ${Colors.darkGray};
+  font-weight: 500;
+`;
+
+const ToolsGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 24px;
+  margin-bottom: 48px;
+`;
+
+const ToolIcon = styled.div`
+  width: 48px;
+  height: 48px;
+  background: ${Colors.secondary};
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: ${Colors.primary};
+`;
+
+const ToolTitle = styled.h3`
+  font-size: 20px;
+  font-weight: 600;
+  color: ${Colors.text};
+  margin-bottom: 8px;
+`;
+
+const ToolDescription = styled.p`
+  color: ${Colors.darkGray};
+  line-height: 1.5;
+  font-size: 14px;
+`;
