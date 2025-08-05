@@ -66,30 +66,36 @@ function AppRoutes() {
           </PrivateRoute>
         }>
           <Route path="/dashboard" element={
-            <PageTransition animation='slide_x'>
+            <PageTransition animation='elastic'>
               <Dashboard />
             </PageTransition>
           } />
           <Route path="/invoices" element={
-            <PageTransition animation='slide_y'>
+            <PageTransition animation='elastic'>
 
               <Invoices />
             </PageTransition>
           } />
           <Route path="/products" element={
-            <PageTransition animation='zoom'>
-            <Products />
+            <PageTransition animation='elastic'>
+              <Products />
             </PageTransition>
           } />
           <Route path="/clients" element={
-            <Clients />
+            <PageTransition animation='elastic'>
+              <Clients />
+            </PageTransition>
           } />
           <Route path="/settings" element={
-            <Settings />
+            <PageTransition animation='elastic'>
+              <Settings />
+            </PageTransition>
           } />
 
           <Route path="/invoiceEditor" element={
-            <InvoiceEditor />
+            <PageTransition animation='elastic'>
+              <InvoiceEditor />
+            </PageTransition>
           } />
 
           <Route path="/notfound" element={<NotFound />} />
@@ -115,10 +121,3 @@ export default function App() {
     </Router>
   );
 }
-
-// const PageWrapper = styled.div`
-//       position: relative;
-//       width: 100vw;
-//       height: 100vh;
-//       overflow: hidden;
-//       `;
