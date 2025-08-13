@@ -98,7 +98,7 @@ const Dashboard: React.FC = () => {
               <StatCard>
                 <StatValue>
                   <Euro size={24} />
-                  {totalIncome}€
+                  {totalIncome.toFixed(2)}€
                 </StatValue>
                 <StatLabel>Chiffre d'affaires</StatLabel>
               </StatCard>

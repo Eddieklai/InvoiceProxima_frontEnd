@@ -167,7 +167,14 @@ export default function Products() {
             tva: Number(formData.get('tva')),
             description: formData.get('description') as string,
           };
-          await createProduct(data);
+          const response = await createProduct(data);
+          if (response) {
+            notify.success('Produit créé avec succès');
+          } else {
+            notify.error('Erreur lors de la création du produit');
+          }
+          closeModal();
+          setRefreshProduct(true);
         }}>
           <FromGroup label="Nom" htmlFor="name" error={null}>
             <Input name="name" placeholder="Nom" required />

@@ -2,11 +2,12 @@ import axios from 'axios';
 
 const API_URL = import.meta.env.VITE_API_URL;
 
-export const createProduct = async (data: {name: string, price:number}) => {
+export const createProduct = async (data: {name: string, price:number, tva: number}) => {
     try {
         const response = await axios.post(`${API_URL}/product`, {
             name: data.name,
             price: data.price,
+            tva : data.tva || 0,
         });
         if (response.status !== 201) {
             throw new Error('Product creation failed');
