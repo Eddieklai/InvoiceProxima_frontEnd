@@ -5,9 +5,8 @@ import { useAuth } from '@/context/AuthContext';
 import Button from '@/components/ui/Button';
 import FormGroup from '@/components/ui/FormGroup';
 import Input from '@/components/ui/Input';
-
 import { Colors } from '@/constants/Colors';
-
+import styled from 'styled-components';
 
 export default function Register() {
   const { isAuthenticated, register, loading, error } = useAuth();
@@ -32,7 +31,6 @@ export default function Register() {
     e.preventDefault();
     setFormError(null);
     for (const [key, value] of Object.entries(form)) {
-      key;
       if (!value) {
         setFormError('Tous les champs sont obligatoires.');
         return;
@@ -58,9 +56,9 @@ export default function Register() {
   if (isAuthenticated) return <Navigate to="/dashboard" replace />;
 
   return (
-    <div style={styles.wrapper}>
-      <div style={styles.card}>
-        <h2>Créer un compte</h2>
+    <Wrapper>
+      <Card>
+        <Title>Créer un compte</Title>
         <form onSubmit={handleSubmit}>
           <FormGroup>
             <Input
@@ -127,73 +125,64 @@ export default function Register() {
               placeholder="Téléphone"
               value={form.phone}
               onChange={handleChange}
+              required
             />
-            <Button type="submit" disabled={loading}>
+            <Button type="submit" disabled={loading} style={{ marginTop: 8 }}>
               {loading ? 'Création...' : 'Créer un compte'}
             </Button>
           </FormGroup>
-          {(formError || error) && <div style={styles.error}>{formError || error}</div>}
+          {(formError || error) && <ErrorMsg>{formError || error}</ErrorMsg>}
         </form>
-        <div style={styles.footer}>
+        <Footer>
           <span>Déjà un compte ? </span>
-          <Link to="/login" style={styles.link}>Se connecter</Link>
-        </div>
-      </div>
-    </div>
+          <StyledLink to="/login">Se connecter</StyledLink>
+        </Footer>
+      </Card>
+    </Wrapper>
   );
 }
 
-const styles = {
-  wrapper: {
-    minHeight: '100vh',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    background: '#F6F4F2',
-  },
-  card: {
-    padding: 32,
-    borderRadius: 8,
-    boxShadow: '0 2px 8px #0001',
-    background: '#fff',
-    minWidth: 340,
-    maxWidth: 400,
-    width: '100%',
-  },
-  input: {
-    width: '100%',
-    padding: 8,
-    borderRadius: 4,
-    border: '1px solid #ccc',
-    marginBottom: 12,
-    fontSize: 15,
-  },
-  button: {
-    width: '100%',
-    padding: 10,
-    borderRadius: 4,
-    background: '#6C4F3D',
-    color: '#fff',
-    border: 'none',
-    fontWeight: 600,
-    fontSize: 16,
-    marginTop: 8,
-    cursor: 'pointer',
-  },
-  error: {
-    color: 'red',
-    marginTop: 8,
-    fontSize: 14,
-  },
-  footer: {
-    marginTop: 16,
-    textAlign: 'center' as const,
-    fontSize: 15,
-  },
-  link: {
-    color: Colors.primary,
-    fontWeight: 500,
-    textDecoration: 'none',
-    marginLeft: 4,
-  },
-};
+const Wrapper = styled.div`
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #F6F4F2;
+`;
+
+const Card = styled.div`
+  padding: 32px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px #0001;
+  background: #fff;
+  min-width: 340px;
+  max-width: 400px;
+  width: 100%;
+`;
+
+const Title = styled.h2`
+  margin-bottom: 24px;
+  font-size: 28px;
+  font-weight: 700;
+  color: ${Colors.primary};
+  text-align: center;
+`;
+
+const ErrorMsg = styled.div`
+  color: ${Colors.error};
+  margin-top: 8px;
+  font-size: 14px;
+`;
+
+const Footer = styled.div`
+  margin-top: 16px;
+  text-align: center;
+  font-size: 15px;
+`;
+
+const StyledLink = styled(Link)`
+  color: ${Colors.primary};
+  font-weight: 500;
+  text-decoration: none;
+  margin-left: 4px;
+`;
