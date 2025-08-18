@@ -12,8 +12,7 @@ import IconButton from '@/components/ui/IconButton';
 
 import type { Invoice } from '@/services/invoiceServices';
 
-
-const Factures: React.FC = () => {
+export default function Invoices() {
     const navigate = useNavigate();
     const { openModal, closeModal } = useModal();
     const { invoices, loading, editInvoice, removeInvoice, error } = useInvoices();
@@ -271,5 +270,3 @@ const inputStyle = {
     marginTop: 4,
     marginBottom: 8,
 };
-
-export default Factures;
