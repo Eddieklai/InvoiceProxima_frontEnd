@@ -227,13 +227,3 @@ export default function Products() {
     </>
   );
 }
-
-const Row = styled.tr`
-  display: flex;
-  gap: 16px;
-  width: 100%;
-  `
-
-const Half = styled.td`
-  flex: 1;
-  `
