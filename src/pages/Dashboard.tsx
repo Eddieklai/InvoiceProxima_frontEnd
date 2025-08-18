@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react';
 import styled from 'styled-components';
-import { Link } from 'react-router-dom';
 import {
   FileText,
   Package,
@@ -56,12 +55,16 @@ const Dashboard: React.FC = () => {
   const { clients } = useClients();
   const [numberOfInvoices, setNumberOfInvoices] = React.useState(0);
   const [totalIncome, setTotalIncome] = React.useState(0);
+  const [totalUnpaid, setTotalUnpaid] = React.useState(0);
   const navigate = useNavigate();
 
   useEffect(() => {
     if (!loading) {
       setNumberOfInvoices(invoices.length);
-      setTotalIncome(invoices.reduce((total, invoice) => total + (invoice.total_ttc || 0), 0));
+      const paidInvoices = invoices.filter(invoices => invoices.status === 'paid');
+      const unpaidInvoices = invoices.filter(invoices => invoices.status === 'unpaid');
+      setTotalIncome(paidInvoices.reduce((total, invoice) => total + (invoice.total_ttc || 0), 0));
+      setTotalUnpaid(unpaidInvoices.reduce((total, invoice) => total + (invoice.total_ttc || 0), 0));
       if (invoices.length === 0) {
         console.log('No invoices found, consider creating one.');
       }
@@ -101,6 +104,13 @@ const Dashboard: React.FC = () => {
                   {totalIncome.toFixed(2)}€
                 </StatValue>
                 <StatLabel>Chiffre d'affaires</StatLabel>
+              </StatCard>
+              <StatCard>
+                <StatValue>
+                  <Euro size={24} />
+                  {totalUnpaid.toFixed(2)}€
+                </StatValue>
+                <StatLabel>Impayée</StatLabel>
               </StatCard>
               <StatCard>
                 <StatValue>

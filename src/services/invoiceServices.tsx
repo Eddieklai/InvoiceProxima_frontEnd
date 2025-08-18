@@ -86,7 +86,7 @@ export const getInvoices = async () => {
     }
 }
 
-export const updateInvoice = async (id: string, data: { title?: string; clientId?: string; total_ttc?: number }) => {
+export const updateInvoice = async (id: string, data: { title?: string; clientId?: string; total_ttc?: number, status?: string }) => {
     try {
         const response = await axios.put(`${API_URL}/invoice/${id}`, data);
         if (response.status !== 200) {

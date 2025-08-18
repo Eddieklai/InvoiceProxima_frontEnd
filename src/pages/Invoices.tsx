@@ -12,6 +12,7 @@ import IconButton from '@/components/ui/IconButton';
 
 import type { Invoice } from '@/services/invoiceServices';
 
+
 const Factures: React.FC = () => {
     const navigate = useNavigate();
     const { openModal, closeModal } = useModal();
@@ -21,7 +22,18 @@ const Factures: React.FC = () => {
         { label: 'Client', render: (invoice: Invoice) => invoice.client?.name || invoice.clientId },
         { label: 'Titre', accessor: 'title' },
         { label: 'Montant', render: (invoice: Invoice) => `${invoice.total_ttc.toFixed(2)} €` },
-        { label: 'Statut', render: (invoice: Invoice) =>  <td style={{ ...tdStyle, ...statusColor(invoice.status) }}>{statusFromEng(invoice.status)}</td> },
+        {
+            label: 'Statut', render: (invoice: Invoice) =>
+                <select
+                    value={invoice.status}
+                    onChange={e => editInvoice(invoice.id, { status: e.target.value })}
+                    style={{ ...tdStyle, ...statusColor(invoice.status), borderRadius: 6, padding: 4, border: '1px solid #ddd' }}
+                >
+                    <option value="paid">Payée</option>
+                    <option value="unpaid">Impayée</option>
+                    {/* <option value="pending">En attente</option> */}
+                </select>
+        },
         {
             label: 'Actions',
             render: (invoice: Invoice) => (

@@ -1,6 +1,5 @@
 import { motion } from 'framer-motion';
 import React from 'react';
-import { useEffect } from 'react';
 
 const variants = {
     fade: {

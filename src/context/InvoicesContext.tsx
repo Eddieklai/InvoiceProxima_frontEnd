@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { getInvoices } from '@/services/invoiceServices';
 import { updateInvoice, deleteInvoice } from '@/services/invoiceServices';
+import { useNotification } from '@/context/NotificationContext';
 
 interface Invoice {
   id: string;
@@ -38,6 +39,7 @@ export const InvoicesProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   const [invoices, setInvoices] = useState<Invoice[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const { notify } = useNotification();
 
   const fetchInvoices = async () => {
     setLoading(true);
@@ -74,8 +76,10 @@ export const InvoicesProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     try {
       await updateInvoice(id, data);
       await fetchInvoices();
+      notify.success('Facture modifiée avec succès');
     } catch (e: any) {
       setError('Erreur lors de la modification de la facture');
+      notify.error('Erreur lors de la modification de la facture');
     } finally {
       setLoading(false);
     }
