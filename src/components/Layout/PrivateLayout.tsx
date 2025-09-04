@@ -16,7 +16,6 @@ const menuGroups = [
     items: [
       { label: 'Créer une facture', icon: PlusCircle, path: '/invoiceEditor' },
       { label: 'Créer un devis', icon: FilePlus, path: '/notfound/quote' },
-      { label: 'Enregistrer un paiement', icon: DollarSign, path: '/notfound/payment' },
     ],
   },
   {
