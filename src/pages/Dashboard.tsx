@@ -101,14 +101,15 @@ const Dashboard: React.FC = () => {
               <StatCard>
                 <StatValue>
                   <Euro size={24} />
-                  {totalIncome.toFixed(2)}€
+                  {totalIncome.toFixed(2)}
                 </StatValue>
                 <StatLabel>Chiffre d'affaires</StatLabel>
               </StatCard>
               <StatCard>
                 <StatValue>
                   <Euro size={24} />
-                  {totalUnpaid.toFixed(2)}€
+                  {totalUnpaid.toFixed(2)}
+                  {/* € */}
                 </StatValue>
                 <StatLabel>Impayée</StatLabel>
               </StatCard>

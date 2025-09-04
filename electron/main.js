@@ -8,7 +8,9 @@ function createWindow() {
         height: 1080,
         webPreferences: {
             contextIsolation: true,
-        }
+        },
+        minwidth: 1000,
+        minheight: 700,
     });
 
     // Enable auto-updates
